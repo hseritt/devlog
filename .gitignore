@@ -1,3 +1,7 @@
-db.sqlite3
+# Unwanted file types 
 *.pyc
 __pycache__
+
+# Unwanted data
+fixtures/
+db.sqlite3

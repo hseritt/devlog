@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -22,7 +23,21 @@ class Task(models.Model):
             ("Deployed", "Deployed"),
             ("Closed", "Closed"),
         ),
+        default="New",
+    )
+    effort = models.IntegerField(
+        validators=[MaxValueValidator(10), MinValueValidator(1)], default=5
+    )
+    type = models.CharField(
+        max_length=30,
+        choices=(
+            ("Feature", "Feature"),
+            ("Bug", "Bug"),
+            ("Task", "Task"),
+            ("Sub Task", "Sub Task"),
+        ),
+        default="Task",
     )
 
     def __str__(self):
-        return f"{self.id} / {self.subject}"
+        return f"{self.id} / {self.subject} / {self.status}"
