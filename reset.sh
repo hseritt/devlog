@@ -5,7 +5,7 @@
 DB_NAME="devlog"
 DB_OWNER="admin"
 POSTGRESQL_SERVICE="postgresql"
-APPS=(tasks)
+APPS=(projects tasks)
 
 # Edit these sparingly
 TS=$(date +%d%h%y-%H%M%S)

@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+from apps.projects.models import Project
+
 
 class Task(models.Model):
     subject = models.CharField(max_length=100, unique=True)
@@ -37,6 +39,9 @@ class Task(models.Model):
             ("Sub Task", "Sub Task"),
         ),
         default="Task",
+    )
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, null=True, blank=True
     )
 
     def __str__(self):
