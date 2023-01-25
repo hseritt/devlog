@@ -47,7 +47,7 @@ reset_migrations() {
     echo "* Resetting migrations ..."
     for app in "${APPS[@]}"
     do
-        rm -rf $app/migrations/*
+        rm -rf apps/$app/migrations/*
     done
     
     python manage.py makemigrations
