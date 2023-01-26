@@ -5,3 +5,11 @@ __pycache__
 # Unwanted data
 fixtures/
 db.sqlite3
+database/
+docker/apps/
+docker/config/
+docker/manage.py
+docker/requirements.txt
+
+# Environment 
+.env*

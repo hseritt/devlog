@@ -79,7 +79,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "devlog",
-        "HOST": "127.0.0.1",
+        "HOST": "db",
         "USER": "admin",
         "PASSWORD": "admin",
         "PORT": "5432",
