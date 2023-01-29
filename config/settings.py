@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "apps.projects",
     "apps.sprints",
     "apps.tasks",
+    "apps.ui",
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,9 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Login Settings
+LOGIN_URL = "/auth/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/auth/login/"
