@@ -8,11 +8,14 @@ from apps.projects.models import Project
 class Task(models.Model):
     subject = models.CharField(max_length=100, unique=True)
     description = models.TextField(null=True, blank=True)
+
     assigned_to = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True, default="admin"
     )
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
     status = models.CharField(
         max_length=30,
         choices=(
@@ -27,9 +30,11 @@ class Task(models.Model):
         ),
         default="New",
     )
+
     effort = models.IntegerField(
         validators=[MaxValueValidator(10), MinValueValidator(1)], default=5
     )
+
     type = models.CharField(
         max_length=30,
         choices=(
@@ -40,9 +45,29 @@ class Task(models.Model):
         ),
         default="Task",
     )
+
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, null=True, blank=True
     )
 
     def __str__(self):
-        return f"{self.id} / {self.subject} / {self.status}"
+        try:
+            title = f"{self.project.prefix}-{self.id} / {self.subject} / {self.status}"
+        except AttributeError as err:
+            if (
+                repr(err)
+                == "AttributeError(\"'NoneType' object has no attribute 'prefix'\")"  # noqa: W503
+            ):
+                title = f"{self.id} / {self.subject} / {self.status}"
+        return title
+
+
+class Comment(models.Model):
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    content = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.task.id} / {self.id}"
