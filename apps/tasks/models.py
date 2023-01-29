@@ -26,7 +26,6 @@ class Task(models.Model):
             ("Awaiting Review", "Awaiting Review"),
             ("In Review", "In Review"),
             ("Awaiting Deployment", "Awaiting Deployment"),
-            ("Deployed", "Deployed"),
             ("Closed", "Closed"),
             ("Won't Fix", "Won't Fix"),
         ),
