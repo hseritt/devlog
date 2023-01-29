@@ -51,7 +51,7 @@ class Task(models.Model):
         Project, on_delete=models.CASCADE, null=True, blank=True
     )
 
-    sprint = models.ForeignKey(Sprint, on_delete=models.CASCADE, null=True, blank=True)
+    sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         try:
