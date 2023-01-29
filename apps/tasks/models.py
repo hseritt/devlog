@@ -4,6 +4,7 @@ from django.db import models
 
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
+from apps.tasks.utils import get_task_title
 
 
 class Task(models.Model):
@@ -59,15 +60,7 @@ class Task(models.Model):
     cloned_by_tasks = models.ManyToManyField("self", blank=True)
 
     def __str__(self):
-        try:
-            title = f"{self.project.prefix}-{self.id} / {self.subject} / {self.status}"
-        except AttributeError as err:
-            if (
-                repr(err)
-                == "AttributeError(\"'NoneType' object has no attribute 'prefix'\")"  # noqa: W503
-            ):
-                title = f"{self.id} / {self.subject} / {self.status}"
-        return title
+        return get_task_title(self)
 
 
 class Comment(models.Model):
