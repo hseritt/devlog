@@ -19,4 +19,8 @@ class Project(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        try:
+            title = f"{self.name} / {self.prefix}"
+        except AttributeError:
+            title = f"{self.name}"
+        return title
