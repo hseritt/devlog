@@ -39,10 +39,12 @@ class Task(models.Model):
     type = models.CharField(
         max_length=30,
         choices=(
+            ("Task", "Task"),
             ("Feature", "Feature"),
             ("Bug", "Bug"),
-            ("Task", "Task"),
-            ("Sub Task", "Sub Task"),
+            ("Story", "Story"),
+            ("Epic", "Epic"),
+            ("Spike", "Spike"),
         ),
         default="Task",
     )
@@ -52,6 +54,9 @@ class Task(models.Model):
     )
 
     sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True)
+
+    blocked_by_tasks = models.ManyToManyField("self", blank=True)
+    cloned_by_tasks = models.ManyToManyField("self", blank=True)
 
     def __str__(self):
         try:
