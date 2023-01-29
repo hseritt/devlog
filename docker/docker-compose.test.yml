@@ -4,15 +4,15 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.prod
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8001
+      dockerfile: Dockerfile.test
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:9001
     volumes:
       - static_volume:/home/devlog/web/staticfiles
       - media_volume:/home/devlog/web/mediafiles
     expose:
-      - 8001
+      - 9001
     env_file:
-      - ./.env.prod
+      - ./.env.test
     depends_on:
       - db
   db:
@@ -21,7 +21,7 @@ services:
     volumes:
       - ~/.prod_data/devlog_db:/var/lib/postgresql/data/
     env_file:
-      - ./.env.prod.db
+      - ./.env.test.db
     ports:
         - "6543:5432"
   nginx:
@@ -30,7 +30,7 @@ services:
       - static_volume:/home/devlog/web/staticfiles
       - media_volume:/home/devlog/web/mediafiles
     ports:
-      - 80:80
+      - 8080:80
     depends_on:
       - web
 
