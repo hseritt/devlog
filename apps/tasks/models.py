@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from apps.projects.models import Project
+from apps.sprints.models import Sprint
 
 
 class Task(models.Model):
@@ -49,6 +50,8 @@ class Task(models.Model):
     project = models.ForeignKey(
         Project, on_delete=models.CASCADE, null=True, blank=True
     )
+
+    sprint = models.ForeignKey(Sprint, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         try:
