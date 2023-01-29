@@ -28,6 +28,7 @@ class Task(models.Model):
             ("Awaiting Deployment", "Awaiting Deployment"),
             ("Deployed", "Deployed"),
             ("Closed", "Closed"),
+            ("Won't Fix", "Won't Fix"),
         ),
         default="New",
     )
