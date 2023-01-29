@@ -1,3 +1,7 @@
 from django.test import TestCase
+from apps.core.tests import BaseTestCase
 
-# Create your tests here.
+
+class BaseSprintTestCase(BaseTestCase):
+    def setUp(self):
+        pass

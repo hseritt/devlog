@@ -13,8 +13,11 @@ fi
 
 # python manage.py flush --no-input
 python manage.py makemigrations
+python manage.py makemigrations core
 python manage.py makemigrations projects
+python manage.py makemigrations sprints
 python manage.py makemigrations tasks
+python manage.py makemigrations ui
 python manage.py migrate
 
 exec "$@"
