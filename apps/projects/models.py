@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -17,6 +18,7 @@ class Project(models.Model):
         ),
         default="R&D",
     )
+    members = models.ManyToManyField(User, blank=True)
 
     def __str__(self):
         try:
