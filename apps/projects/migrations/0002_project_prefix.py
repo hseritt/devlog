@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="project",
             name="prefix",
-            field=models.CharField(max_length=4, unique=True, null=True, blank=True),
+            field=models.CharField(max_length=4, null=True, blank=True),
         ),
     ]

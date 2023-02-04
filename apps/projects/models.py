@@ -4,7 +4,7 @@ from django.db import models
 
 class Project(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    prefix = models.CharField(max_length=4, null=True, blank=True, unique=True)
+    prefix = models.CharField(max_length=4, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     description = models.TextField(null=True, blank=True)
     scope = models.CharField(
