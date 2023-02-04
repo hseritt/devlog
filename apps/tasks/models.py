@@ -58,6 +58,8 @@ class Task(models.Model):
 
     blocked_by_tasks = models.ManyToManyField("self", blank=True)
     cloned_by_tasks = models.ManyToManyField("self", blank=True)
+    related_to_tasks = models.ManyToManyField("self", blank=True)
+    blocking_tasks = models.ManyToManyField("self", blank=True)
 
     def __str__(self):
         return get_task_title(self)
