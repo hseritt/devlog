@@ -18,7 +18,17 @@ class Project(models.Model):
         ),
         default="R&D",
     )
-    members = models.ManyToManyField(User, blank=True)
+    members = models.ManyToManyField(User, blank=True, related_name="project_members")
+    manager = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="project_manager",
+    )
+
+    class Meta:
+        ordering = ("name",)
 
     def __str__(self):
         try:
