@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Task, Comment
+from .models import Task, Comment, Category
+from .forms import CategoryAdminForm
 
 
 class CommentsInline(admin.TabularInline):
@@ -16,5 +17,10 @@ class TaskAdmin(admin.ModelAdmin):
     ]
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    form = CategoryAdminForm
+
+
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Comment)
+admin.site.register(Category, CategoryAdmin)
