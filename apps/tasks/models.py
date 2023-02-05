@@ -1,10 +1,34 @@
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
+from django.db.utils import IntegrityError
+from django.forms import ValidationError
+from django.utils.translation import gettext as _
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
 from apps.tasks.utils import get_task_title
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        try:
+            super(Category, self).save(*args, **kwargs)
+        except IntegrityError as err:
+            raise ValidationError(
+                _(
+                    f'Categories are saved with lowercase(). A category with this name ("{self.name}") already exists.'
+                )
+            )
 
 
 class Task(models.Model):
@@ -60,6 +84,7 @@ class Task(models.Model):
     cloned_by_tasks = models.ManyToManyField("self", blank=True)
     related_to_tasks = models.ManyToManyField("self", blank=True)
     blocking_tasks = models.ManyToManyField("self", blank=True)
+    categories = models.ManyToManyField(Category, blank=True)
 
     def __str__(self):
         return get_task_title(self)
