@@ -18,7 +18,9 @@
       <th>Created</th>
       <th>Status</th>
       <th>Assigned To</th>
-      <th>Actions</th>
+      {% if request.resolver_match.url_name == 'ui-sprint-view' %}
+        <th>Actions</th>
+      {% endif %}
     </thead>
 
     <tbody>
@@ -31,14 +33,15 @@
         <td>{{ task.created|date:"m/d/Y" }}</td>
         <td>{{ task.status }}</td>
         <td>{{ task.assigned_to }}</td>
-        <td style="text-align: center; vertical-align: middle;">
-          <a href="{% url 'ui-remove-task-from-sprint-view' sprint.id task.id %}"
-            title="Remove from Sprint" 
-            onclick="return confirm('Confirm removal of this task from the current sprint.')">
-              <button class="btn btn-danger" style="font-size: small;">-</button>
-          </a>
-          
-        </td>
+        {% if request.resolver_match.url_name == 'ui-sprint-view' %}
+          <td style="text-align: center; vertical-align: middle;">
+            <a href="{% url 'ui-remove-task-from-sprint-view' sprint.id task.id %}"
+              title="Remove from Sprint" 
+              onclick="return confirm('Confirm removal of this task from the current sprint.')">
+                <button class="btn btn-danger" style="font-size: small;">-</button>
+            </a>
+          </td>
+        {% endif %}
       </tr>
       {% empty %}
       <tr>
