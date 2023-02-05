@@ -9,7 +9,9 @@
     <tbody>
       {% for project in project_qs %}
       <tr>
-        <td>{{ project.name }}</td>
+        <td>
+          <a href="{% url 'ui-project-view' project.id %}">{{ project.name }}</a>
+        </td>
         <td>{{ project.prefix }}</td>
         <td>{{ project.manager }}</td>
       </tr>

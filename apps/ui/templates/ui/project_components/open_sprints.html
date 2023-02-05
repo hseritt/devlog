@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <h2>Open Sprints for Project: {{ project.name }}</h2>
+</div>
+
+<div class="container mt-4 mb-4">
+  <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <th>Name</th>
+      <th>Started</th>
+      <th>Ended</th>
+      <th>Status</th>
+      <th>Leader</th>
+    </thead>
+    <tbody>
+      {% for sprint in project.sprint_set.all %}
+        <tr>
+          <td>{{ sprint.name }}</td>
+          <td>{{ sprint.started|default:'--' }}</td>
+          <td>{{ sprint.ended|default:'--' }}</td>
+          <td>{{ sprint.status }}</td>
+          <td>{{ sprint.leader }}</td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            {% include 'ui/project_components/open_tasks.html' %}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            {% include 'ui/project_components/finished_tasks.html' %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

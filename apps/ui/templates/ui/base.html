@@ -16,17 +16,40 @@
     body {
       font-size: 14px;
     }
+    span {
+      margin-right: 1rem;
+    }
+    #nav > span > a {
+      font-size: smaller;
+      text-decoration: none;
+      color: gray;
+    }
+    #nav > span > a:hover {
+      color: lightgrey;
+    }
   </style>
   <body>
     <div id="wrapper" class="container-fluid">
       <div id="header" class="container mt-4 mb-4">
         <h1>This is Devlog</h1>
       </div>
-      <div id="nav" class="container mb-4">
-        {% if request.user.is_authenticated %}
-        <a href="{% url 'logout' %}">Logout</a>
-        {% endif %}
-      </div>
+      {% if request.user.is_authenticated %}
+        <div id="nav" class="container mb-4">
+          <span>
+            <a href="{% url 'ui-index-view' %}">HOME</a>
+          </span>
+          
+          <span class="">
+            <a href="{% url 'logout' %}">LOGOUT</a>
+          </span>
+          
+          {% if request.user.is_staff %}
+            <span class="">
+              <a href="{% url 'admin:index' %}">ADMIN</a>
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
       {% block content %}
 
       {% endblock %}
