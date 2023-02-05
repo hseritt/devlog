@@ -28,7 +28,7 @@ class Sprint(models.Model):
                     Q(status="Closed") | Q(status="Won't Fix"), sprint=self
                 )
             )
-        ) / float(Task.objects.count())
+        ) / float(Task.objects.filter(sprint=self).count())
 
     def __str__(self):
         return f"{self.id}:{self.name} {self.started} - {self.end}"
