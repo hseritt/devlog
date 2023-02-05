@@ -23,7 +23,7 @@ class Category(models.Model):
         self.name = self.name.lower()
         try:
             super(Category, self).save(*args, **kwargs)
-        except IntegrityError as err:
+        except IntegrityError:
             raise ValidationError(
                 _(
                     f'Categories are saved with lowercase(). A category with this name ("{self.name}") already exists.'
