@@ -8,7 +8,7 @@
       <th>Name</th>
       <th>Project</th>
       <th>Started</th>
-      <th>Ended</th>
+      <th>Ends On</th>
       <th>Status</th>
       <th>Leader</th>
     </thead>
@@ -19,7 +19,7 @@
             <td>{{ sprint.name }}</td>
             <td>{{ sprint.project.name }}</td>
             <td>{{ sprint.started|default:'--' }}</td>
-            <td>{{ sprint.ended|default:'--' }}</td>
+            <td>{{ sprint.end|default:'--' }}</td>
             <td>{{ sprint.status }}</td>
             <td>{{ sprint.leader }}</td>
           </tr>

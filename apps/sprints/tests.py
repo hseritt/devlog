@@ -1,9 +1,7 @@
 from django.test import TestCase
-from apps.core.tests import BaseTestCase
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
 from django.contrib.auth.models import User
-from django.test import TestCase
 from apps.tasks.models import Task
 
 
@@ -24,9 +22,9 @@ class SprintVelocityTestCase(TestCase):
             leader=User.objects.get(username="admin"),
         )
         for i in range(5):
-            task = Task.objects.create(
+            Task.objects.create(
                 subject=f"Issue number {i}",
-                description=f"Example description",
+                description="Example description",
                 effort=5,
                 sprint=sprint,
             )
