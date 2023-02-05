@@ -1,11 +1,6 @@
 {% load ui_tags %}
-<style>
-  h4 {
-    text-align: center;
-  }
-</style>
 <div class="container mt-4">
-  <h4>Open Tasks</h4>
+  <h4>Backlog</h4>
 </div>
 
 <div id="task_by_project" class="container mt-4 mb-4">
@@ -22,7 +17,7 @@
     </thead>
 
     <tbody>
-      {% for task in sprint.task_set.all|task_open_status  %}
+      {% for task in sprint.task_set.all|task_backlog:sprint.project.id|task_open_status  %}
       <tr>
         <td>{{task.project.prefix|default:'N/A' }}-{{ task.id }}</td>
         <td>{{ task.subject }}</td>
@@ -32,10 +27,8 @@
         <td>{{ task.status }}</td>
         <td>{{ task.assigned_to }}</td>
         <td style="text-align: center; vertical-align: middle;">
-          <a href="{% url 'ui-remove-task-from-sprint-view' sprint.id task.id %}"
-            title="Remove from Sprint" 
-            onclick="return confirm('Confirm removal of this task from the current sprint.')">
-              <button class="btn btn-danger" style="font-size: small;">-</button>
+          <a href="{% url 'ui-add-task-to-sprint-view' sprint.id task.id %}" title="Add To Current Sprint">
+            <button class="btn btn-success" style="font-size: small;">+</button>
           </a>
           
         </td>

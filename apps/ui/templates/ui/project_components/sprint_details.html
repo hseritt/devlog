@@ -1,0 +1,45 @@
+<div id="projects" class="container">
+  <div class="container mt-4 mb-4">
+    <h2 style="text-align: center;">Sprint Details for {{ sprint.name }}</h2>
+  </div>
+  
+  <style>
+    th {
+      width: 300px;
+    }
+  </style>
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th>Project</th>
+      <td>{{ sprint.project.name }}</td>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <td>{{ sprint.name }}</td>
+    </tr>
+    <tr>
+      <th>Started</th>
+      <td>{{ sprint.started }}</td>
+    </tr>
+    <tr>
+      <th>Ends</th>
+      <td>{{ sprint.end|default:'--' }}</td>
+    </tr>
+    <tr>
+      <th>Leader</th>
+      <td>{{ sprint.leader }}</td>
+    </tr>
+    <tr>
+      <th>Status</th>
+      <td>{{ sprint.status }}</td>
+    </tr>
+    <tr>
+      <th>Velocity</th>
+      <td>{{ sprint.get_velocity }}</td>
+    </tr>
+    <tr>
+      <th>Percentage Complete</th>
+      <td>{% widthratio sprint.get_completion_pct 1 100 %}%</td>
+    </tr>
+  </table>
+</div>

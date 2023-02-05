@@ -32,7 +32,7 @@ class Project(models.Model):
 
     def __str__(self):
         try:
-            title = f"{self.name} / {self.prefix}"
+            title = f"{self.id } / {self.name} / {self.prefix}"
         except AttributeError:
-            title = f"{self.name}"
+            title = f"{self.id } / {self.name}"
         return title

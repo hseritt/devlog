@@ -17,7 +17,11 @@
       {% for project in project_qs %}
         {% for sprint in project.sprint_set.all|sprint_open_status %}
           <tr>
-            <td>{{ sprint.name }}</td>
+            <td>
+              <a href="{% url 'ui-sprint-view' sprint.id %}">
+                {{ sprint.name }}
+              </a>
+            </td>
             <td>{{ sprint.project.name }}</td>
             <td>{{ sprint.started|default:'--' }}</td>
             <td>{{ sprint.end|default:'--' }}</td>

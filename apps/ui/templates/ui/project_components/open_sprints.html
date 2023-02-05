@@ -23,7 +23,11 @@
       </thead>
       <tbody>
           <tr>
-            <td class="sprint-standout">{{ sprint.name }}</td>
+            <td class="sprint-standout">
+              <a href="{% url 'ui-sprint-view' sprint.id %}">
+                {{ sprint.name }}
+              </a>
+            </td>
             <td class="sprint-standout">{{ sprint.started|default:'--' }}</td>
             <td class="sprint-standout">{{ sprint.end|default:'--' }}</td>
             <td class="sprint-standout">{{ sprint.status }}</td>

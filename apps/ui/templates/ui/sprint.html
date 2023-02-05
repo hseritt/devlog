@@ -1,0 +1,9 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+<div id="content" class="container mb-4">
+  {% include 'ui/project_components/sprint_details.html' %}
+  {% include 'ui/project_components/open_tasks.html' %}
+  {% include 'ui/project_components/finished_tasks.html' %}
+  {% include 'ui/project_components/backlog.html' %}
+</div>
+{% endblock %}
