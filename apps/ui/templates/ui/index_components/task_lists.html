@@ -1,11 +1,11 @@
 {% load ui_tags %}
 <div class="container mt-4">
-  <h2>Open Tasks Lists by Project</h2>
+  <h2 style="text-align: center;">Open Tasks Lists by Project</h2>
 </div>
 
 <div id="task_by_project" class="container mt-4 mb-4">
   {% for project in project_qs %}
-  <h3>{{ project.name }} ({{ project.prefix|default:'-' }})</h3>
+  <h4>Project: {{ project.name }} ({{ project.prefix|default:'-' }})</h4>
   <table class="table table-striped table-bordered">
     <thead class="table-dark">
       <th>No.</th>

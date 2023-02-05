@@ -6,7 +6,7 @@
   }
 </style>
 <div class="container mt-4">
-  <h2>Open Sprints for Project: {{ project.name }}</h2>
+  <h2 style="text-align: center;">Current Sprints</h2>
 </div>
 
 <div class="container mt-4 mb-4">
@@ -32,12 +32,12 @@
             <td class="sprint-standout">{% widthratio sprint.get_completion_pct 1 100 %}%</td>
           </tr>
           <tr>
-            <td colspan="5">
+            <td colspan="7">
               {% include 'ui/project_components/open_tasks.html' %}
             </td>
           </tr>
           <tr>
-            <td colspan="5">
+            <td colspan="7">
               {% include 'ui/project_components/finished_tasks.html' %}
             </td>
           </tr>
