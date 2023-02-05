@@ -18,6 +18,8 @@
         <th>Ended</th>
         <th>Status</th>
         <th>Leader</th>
+        <th>Velocity</th>
+        <th>Comp. Pct.</th>
       </thead>
       <tbody>
           <tr>
@@ -26,6 +28,8 @@
             <td class="sprint-standout">{{ sprint.ended|default:'--' }}</td>
             <td class="sprint-standout">{{ sprint.status }}</td>
             <td class="sprint-standout">{{ sprint.leader }}</td>
+            <td class="sprint-standout">{{ sprint.get_velocity }}</td>
+            <td class="sprint-standout">{% widthratio sprint.get_completion_pct 1 100 %}</td>
           </tr>
           <tr>
             <td colspan="5">

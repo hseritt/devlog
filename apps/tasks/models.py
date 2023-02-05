@@ -12,7 +12,7 @@ class Task(models.Model):
     description = models.TextField(null=True, blank=True)
 
     assigned_to = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True, default="admin"
+        User, on_delete=models.CASCADE, null=True, blank=True
     )
 
     created = models.DateTimeField(auto_now_add=True)
