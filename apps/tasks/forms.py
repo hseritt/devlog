@@ -18,11 +18,11 @@ class CategoryAdminForm(ModelForm):
         exclude = []
 
     def clean_name(self):
-        name = self.cleaned_data["name"].lower()
+        name = self.cleaned_data["name"].title()
         try:
             Category.objects.get(name=name)
             raise forms.ValidationError(
-                f"Categories are saved with lowercase(). A category with this name ('{name}') already exists."
+                f"Categories are saved with titlecase(). A category with this name ('{name}') already exists."
             )
         except Category.DoesNotExist:
             pass

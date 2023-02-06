@@ -6,6 +6,7 @@ from .views import (
     SprintView,
     AddTaskToSprintView,
     RemoveTaskFromSprintView,
+    AddTaskView,
 )
 
 urlpatterns = [
@@ -29,5 +30,10 @@ urlpatterns = [
         "sprint/<int:sprint_id>/task/<int:task_id>/remove/",
         login_required(RemoveTaskFromSprintView.as_view()),
         name="ui-remove-task-from-sprint-view",
+    ),
+    path(
+        "project/<int:project_id>/task/add/",
+        login_required(AddTaskView.as_view()),
+        name="ui-add-task-view",
     ),
 ]

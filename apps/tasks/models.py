@@ -20,13 +20,13 @@ class Category(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.name = self.name.lower()
+        self.name = self.name.title()
         try:
             super(Category, self).save(*args, **kwargs)
         except IntegrityError:
             raise ValidationError(
                 _(
-                    f'Categories are saved with lowercase(). A category with this name ("{self.name}") already exists.'
+                    f'Categories are saved with titlecase(). A category with this name ("{self.name}") already exists.'
                 )
             )
 
@@ -58,7 +58,10 @@ class Task(models.Model):
     )
 
     effort = models.IntegerField(
-        validators=[MaxValueValidator(10), MinValueValidator(1)], default=5
+        validators=[MaxValueValidator(10), MinValueValidator(1)],
+        default=5,
+        null=True,
+        blank=True,
     )
 
     type = models.CharField(
