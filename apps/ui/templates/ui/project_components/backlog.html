@@ -19,13 +19,7 @@
     <tbody>
       {% for task in sprint.task_set.all|task_backlog:sprint.project.id|task_open_status  %}
       <tr>
-        <td>{{task.project.prefix|default:'N/A' }}-{{ task.id }}</td>
-        <td>{{ task.subject }}</td>
-        <td>{{ task.type }}</td>
-        <td>{{ task.effort }}</td>
-        <td>{{ task.created|date:"m/d/Y" }}</td>
-        <td>{{ task.status }}</td>
-        <td>{{ task.assigned_to }}</td>
+        {% include 'ui/shared_components/task_list.html' %}
         <td style="text-align: center; vertical-align: middle;">
           <a href="{% url 'ui-add-task-to-sprint-view' sprint.id task.id %}" title="Add To Current Sprint">
             <button class="btn btn-success" style="font-size: small;">+</button>

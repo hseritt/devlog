@@ -21,13 +21,7 @@
     <tbody>
       {% for task in project.task_set.all|task_open_status  %}
       <tr>
-        <td>{{project.prefix|default:'N/A' }}-{{ task.id }}</td>
-        <td>{{ task.subject }}</td>
-        <td>{{ task.type }}</td>
-        <td>{{ task.effort }}</td>
-        <td>{{ task.created|date:"m/d/Y" }}</td>
-        <td>{{ task.status }}</td>
-        <td>{{ task.assigned_to }}</td>
+        {% include 'ui/shared_components/task_list.html' %}
         <td>{{ task.sprint.name|default:'Backlog' }}</td>
       </tr>
       {% empty %}

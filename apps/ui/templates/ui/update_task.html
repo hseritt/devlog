@@ -1,0 +1,47 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+<style>
+    table {
+        max-width: 40%;
+    }
+
+    input[type=text] {
+        min-width: 50%;
+    }
+
+    input[type=number] {
+        max-width: 60px;
+    }
+
+    textarea {
+        min-width: 50%;
+        padding: 10px;
+        resize: both;
+    }
+
+    input {
+        padding: 0.5rem;
+    }
+
+    select {
+        padding: 0.5rem;
+    }
+</style>
+<div id="content" class="container mb-4">
+    <h3>Update Task: {{task.project.prefix|default:'N/A' }}-{{ task.id }}</h3>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% for field in update_task_form %}
+            <p>{{ field.label }}</p>
+            <p>{{ field }}</p>
+        {% endfor %}
+        <p>
+            <button type="submit" class="btn btn-success">Save</button>
+            
+            <button class="btn btn-warning" onclick=window.location.href="{% url 'ui-task-view' task.id %}">
+                Cancel
+            </button>
+        </p>
+    </form>
+</div>
+{% endblock %}

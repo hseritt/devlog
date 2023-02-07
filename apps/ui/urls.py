@@ -7,17 +7,20 @@ from .views import (
     AddTaskToSprintView,
     RemoveTaskFromSprintView,
     AddTaskView,
+    TaskView,
+    AddCommentView,
+    UpdateTaskView,
 )
 
 urlpatterns = [
     path("", login_required(IndexView.as_view()), name="ui-index-view"),
     path(
-        "project/<int:project_id>",
+        "project/<int:project_id>/",
         login_required(ProjectView.as_view()),
         name="ui-project-view",
     ),
     path(
-        "sprint/<int:sprint_id>",
+        "sprint/<int:sprint_id>/",
         login_required(SprintView.as_view()),
         name="ui-sprint-view",
     ),
@@ -35,5 +38,18 @@ urlpatterns = [
         "project/<int:project_id>/task/add/",
         login_required(AddTaskView.as_view()),
         name="ui-add-task-view",
+    ),
+    path(
+        "task/<int:task_id>/", login_required(TaskView.as_view()), name="ui-task-view"
+    ),
+    path(
+        "task/<int:task_id>/comment/add/",
+        login_required(AddCommentView.as_view()),
+        name="ui-add-comment-view",
+    ),
+    path(
+        "task/<int:task_id>/update/",
+        login_required(UpdateTaskView.as_view()),
+        name="ui-update-task-view",
     ),
 ]

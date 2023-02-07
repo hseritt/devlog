@@ -31,4 +31,4 @@ class Sprint(models.Model):
         ) / float(Task.objects.filter(sprint=self).count())
 
     def __str__(self):
-        return f"{self.id}:{self.name} {self.started} - {self.end}"
+        return f"{self.name}"

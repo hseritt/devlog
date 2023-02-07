@@ -1,0 +1,58 @@
+{% extends 'ui/base.html' %}
+{% block content %}
+<style>
+    table {
+        max-width: 40%;
+    }
+
+    input[type=text] {
+        min-width: 50%;
+    }
+
+    input[type=number] {
+        max-width: 60px;
+    }
+
+    textarea {
+        min-width: 50%;
+        padding: 10px;
+        resize: both;
+    }
+
+    input {
+        padding: 0.5rem;
+    }
+
+    select {
+        padding: 0.5rem;
+    }
+</style>
+<div id="content" class="container mb-4">
+    <div class="container mb-4">
+      <h4>{{ task.project.prefix|default:'N/A' }}-{{ task.id }}: {{ task.subject}}</h4>
+
+      <b>Task Description:</b>
+
+      <div>{{ task.description }}</div>
+    </div>
+    
+    <div class="container mb-4">
+      <h4>Add Comment for Task: </h4>
+      <form action="" method="POST">
+          {% csrf_token %}
+          {% for field in add_comment_form %}
+              <p>{{ field.label }}</p>
+              <p>{{ field }}</p>
+          {% endfor %}
+          <p>
+              <button type="submit" class="btn btn-success">Submit</button>
+              
+              <button class="btn btn-warning" onclick=window.location.href="{% url 'ui-task-view' task.id %}">
+                  Cancel
+              </button>
+          </p>
+      </form>
+    </div>
+    
+</div>
+{% endblock %}

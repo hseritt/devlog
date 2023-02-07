@@ -1,0 +1,118 @@
+<div id="projects" class="container">
+  <div class="container mt-4 mb-4">
+    <h2 style="text-align: center;">
+      {{task.project.prefix|default:'N/A' }}-{{ task.id }}: {{ task.subject}} 
+        <a href="{% url 'ui-update-task-view' task.id %}" title="Update details for this task">@</a>
+    </h2>
+  </div>
+  
+  <style>
+    th {
+      width: 300px;
+    }
+    ul {
+      list-style: none;
+    }
+  </style>
+  <table class="table table-striped table-bordered">
+    <tr>
+      <th>Subject</th>
+      <td>{{ task.subject }}</td>
+    </tr>
+    <tr>
+      <th>Assigned To</th>
+      <td>{{ task.assigned_to }}</td>
+    </tr>
+    <tr>
+      <th>Created</th>
+      <td>{{ task.created }}</td>
+    </tr>
+    <tr>
+      <th>Modified</th>
+      <td>{{ task.modified }}</td>
+    </tr>
+    <tr>
+      <th>Status</th>
+      <td>{{ task.status }}</td>
+    </tr>
+    <tr>
+      <th>Effort Level</th>
+      <td>{{ task.effort }}</td>
+    </tr>
+    <tr>
+      <th>Type</th>
+      <td>{{ task.type }}</td>
+    </tr>
+    <tr>
+      <th>Project</th>
+      <td>{{ task.project }}</td>
+    </tr>
+    <tr>
+      <th>Sprint</th>
+      <td>{{ task.sprint.name|default:"Backlog" }}</td>
+    </tr>
+    <tr>
+      <th>Blocked By Tasks</th>
+      <td>
+        {% for task in task.blocked_by_tasks.all %}
+            <a href="{% url 'ui-task-view' task.id %}" target="_blank">
+              {{ task }}
+            </a>
+            <br>
+        {% empty %}
+          None
+        {% endfor %}        
+      </td>
+    </tr>
+    <tr>
+      <th>Cloned By Tasks</th>
+      <td>
+        {% for task in task.cloned_by_tasks.all %}
+            <a href="{% url 'ui-task-view' task.id %}" target="_blank">
+              {{ task }}
+            </a>
+            <br>
+        {% empty %}
+          None
+        {% endfor %}        
+      </td>
+    </tr>
+    <tr>
+      <th>Related To Tasks</th>
+      <td>
+        {% for task in task.related_to_tasks.all %}
+            <a href="{% url 'ui-task-view' task.id %}" target="_blank">
+              {{ task }}
+            </a>
+            <br>
+        {% empty %}
+          None
+        {% endfor %}        
+      </td>
+    </tr>
+    <tr>
+      <th>Blocking Other Tasks</th>
+      <td>
+        {% for task in task.blocking_tasks.all %}
+            <a href="{% url 'ui-task-view' task.id %}" target="_blank">
+              {{ task }}
+            </a>
+            <br>
+        {% empty %}
+          None
+        {% endfor %}        
+      </td>
+    </tr>
+    <tr>
+      <th>Categories</th>
+      <td>{{ task.categories.all|join:", "|default:"None" }}</td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td>{{ task.description|linebreaks }}</td>
+    </tr>
+  </table>
+
+  {% include 'ui/task_components/comments.html' %}
+  
+</div>

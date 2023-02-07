@@ -1,0 +1,11 @@
+<td>
+  <a href="{% url 'ui-task-view' task.id %}">
+    {{task.project.prefix|default:'N/A' }}-{{ task.id }}
+  </a>
+</td>
+<td>{{ task.subject }}</td>
+<td>{{ task.type }}</td>
+<td>{{ task.effort }}</td>
+<td>{{ task.created|date:"m/d/Y" }}</td>
+<td>{{ task.status }}</td>
+<td>{{ task.assigned_to }}</td>

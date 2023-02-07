@@ -1,0 +1,38 @@
+<style>
+  h3, .comment {
+    text-align: center;
+  }
+
+  .comment-author, .comment-content {
+    min-width: 400px;
+    text-align: left;
+    
+  }
+
+  .comment-author {
+    background-color: lightgrey;
+    padding: 0.5rem;
+    font-size: smaller;
+  }
+
+  .comment-content {
+    background-color: whitesmoke;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+
+</style>
+
+<h3>Comments <a href="{% url 'ui-add-comment-view' task.id %}" title="Add comment for this task">+</a></h3>
+{% for comment in task.comment_set.all %}
+  <div class="comment">
+    <div class="comment-author">
+      Comment by {{ comment.author }} at {{ comment.created }}
+    </div>
+    <div class="comment-content">
+      {{ comment.content|linebreaks }}
+    </div>
+  </div>
+{% empty %}
+  <div>None</div>
+{% endfor %}
