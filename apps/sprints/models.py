@@ -22,13 +22,16 @@ class Sprint(models.Model):
 
     def get_completion_pct(self):
         Task = apps.get_model("tasks", "Task")
-        return float(
-            len(
-                Task.objects.filter(
-                    Q(status="Closed") | Q(status="Won't Fix"), sprint=self
+        try:
+            return float(
+                len(
+                    Task.objects.filter(
+                        Q(status="Closed") | Q(status="Won't Fix"), sprint=self
+                    )
                 )
-            )
-        ) / float(Task.objects.filter(sprint=self).count())
+            ) / float(Task.objects.filter(sprint=self).count())
+        except ZeroDivisionError:
+            return 0
 
     def __str__(self):
         return f"{self.name}"

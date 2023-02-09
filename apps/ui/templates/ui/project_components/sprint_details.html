@@ -1,6 +1,11 @@
 <div id="projects" class="container">
   <div class="container mt-4 mb-4">
-    <h2 style="text-align: center;">Sprint Details for {{ sprint.name }}</h2>
+    <h2 style="text-align: center;">
+      Sprint Details for {{ sprint.name }}
+      <a href="{% url 'ui-update-sprint-view' sprint.id %}" title="Update details for this sprint">
+        @
+      </a>
+    </h2>
   </div>
   
   <style>

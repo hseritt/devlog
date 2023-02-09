@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from apps.tasks.models import Task, Comment
+from apps.sprints.models import Sprint
 
 
 class AddTaskForm(ModelForm):
@@ -37,3 +38,15 @@ class UpdateTaskForm(ModelForm):
         exclude = [
             "project",
         ]
+
+
+class AddSprintForm(ModelForm):
+    class Meta:
+        model = Sprint
+        exclude = []
+
+
+class UpdateSprintForm(ModelForm):
+    class Meta:
+        model = Sprint
+        exclude = []

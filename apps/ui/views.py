@@ -8,7 +8,13 @@ from apps.projects.models import Project
 from apps.sprints.models import Sprint
 from apps.tasks.models import Task
 
-from .forms import AddTaskForm, AddCommentForm, UpdateTaskForm
+from .forms import (
+    AddTaskForm,
+    AddCommentForm,
+    UpdateTaskForm,
+    AddSprintForm,
+    UpdateSprintForm,
+)
 
 
 class IndexView(View):
@@ -195,4 +201,68 @@ class UpdateTaskView(View):
             request,
             self.template,
             context={"task": task, "update_task_form": update_task_form},
+        )
+
+
+class AddSprintView(View):
+    template = "ui/add_sprint.html"
+
+    def get(self, request):
+        add_sprint_form = AddSprintForm()
+        return render(
+            request,
+            self.template,
+            context={"add_sprint_form": add_sprint_form},
+        )
+
+    def post(self, request):
+        add_sprint_form = AddSprintForm(request.POST)
+        if add_sprint_form.is_valid():
+            sprint = add_sprint_form.save()
+
+            return HttpResponseRedirect(
+                reverse(
+                    "ui-sprint-view",
+                    args=[
+                        sprint.id,
+                    ],
+                )
+            )
+        return render(
+            request,
+            self.template,
+            context={"add_sprint_form": add_sprint_form},
+        )
+
+
+class UpdateSprintView(View):
+    template = "ui/update_sprint.html"
+
+    def get(self, request, sprint_id):
+        sprint = Sprint.objects.get(pk=sprint_id)
+        update_sprint_form = UpdateSprintForm(instance=sprint)
+        return render(
+            request,
+            self.template,
+            context={"sprint": sprint, "update_sprint_form": update_sprint_form},
+        )
+
+    def post(self, request, sprint_id):
+        sprint = Sprint.objects.get(pk=sprint_id)
+        update_sprint_form = UpdateSprintForm(request.POST, instance=sprint)
+        if update_sprint_form.is_valid():
+            update_sprint_form.save()
+
+            return HttpResponseRedirect(
+                reverse(
+                    "ui-sprint-view",
+                    args=[
+                        sprint.id,
+                    ],
+                )
+            )
+        return render(
+            request,
+            self.template,
+            context={"sprint": sprint, "update_sprint_form": update_sprint_form},
         )

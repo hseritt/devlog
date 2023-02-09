@@ -10,6 +10,8 @@ from .views import (
     TaskView,
     AddCommentView,
     UpdateTaskView,
+    AddSprintView,
+    UpdateSprintView,
 )
 
 urlpatterns = [
@@ -51,5 +53,15 @@ urlpatterns = [
         "task/<int:task_id>/update/",
         login_required(UpdateTaskView.as_view()),
         name="ui-update-task-view",
+    ),
+    path(
+        "sprint/add/",
+        login_required(AddSprintView.as_view()),
+        name="ui-add-sprint-view",
+    ),
+    path(
+        "sprint/<int:sprint_id>/update/",
+        login_required(UpdateSprintView.as_view()),
+        name="ui-update-sprint-view",
     ),
 ]

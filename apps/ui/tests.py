@@ -194,3 +194,47 @@ class UIUrlsBaseTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTrue(b"/auth/login" in response.content)
+
+    def test_update_sprint_view(self):
+        url = "ui-update-sprint-view"
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(
+            reverse(
+                url,
+                args=[
+                    self.sprint.id,
+                ],
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.client.logout()
+        response = self.client.get(
+            reverse(
+                url,
+                args=[
+                    self.sprint.id,
+                ],
+            ),
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b"/auth/login" in response.content)
+
+    def test_add_sprint_view(self):
+        url = "ui-add-sprint-view"
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(
+            reverse(
+                url,
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+        self.client.logout()
+        response = self.client.get(
+            reverse(
+                url,
+            ),
+            follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b"/auth/login" in response.content)

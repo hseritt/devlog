@@ -1,6 +1,10 @@
 {% load ui_tags %}
 <div class="container mt-4">
-  <h2 style="text-align: center;">Open Sprints</h2>
+  <h2 style="text-align: center;">
+    Open Sprints
+    <a href="{% url 'ui-add-sprint-view' %}" title="Add new sprint for this project">
+      +</a>
+  </h2>
 </div>
 
 <div class="container mt-4 mb-4">
