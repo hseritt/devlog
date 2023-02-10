@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "apps.sprints",
     "apps.tasks",
     "apps.ui",
+    "apps.services",
 ]
 
 MIDDLEWARE = [
