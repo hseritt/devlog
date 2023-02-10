@@ -10,6 +10,7 @@ docker/apps/
 docker/config/
 docker/manage.py
 docker/requirements.txt
+docker/staticfiles
 tmp/
 
 # Environment 

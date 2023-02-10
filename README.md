@@ -21,6 +21,23 @@ Add 'apps.appname' to INSTALLED_APPS in config/settings.py
 
 Change app name in apps/appname/apps.py to use 'apps.appname' instead of just 'appname'.
 
+### Git
+
+#### .gitignore
+
+Add all files/folders you don't want to add to the git repo here.
+
+Examples:
+
+```
+filename.ext
+filename*   # wildcard filename
+*.ext       # all file types of this extension
+folder/     # folder
+folder/subfolder/
+folder/filename.ext
+```
+
 ### Scripts
 
 - reset.sh - Resets data for project. It dumps current data to a fixture file. Recreates a postgres database, runs migrations and then imports the dumped data back into the database. This can be error-prone but by default it does backup your data set to fixtures/backups so that you can find your last good backup. You could then run:
