@@ -67,12 +67,13 @@ class Task(models.Model):
     type = models.CharField(
         max_length=30,
         choices=(
-            ("Task", "Task"),
-            ("Feature", "Feature"),
             ("Bug", "Bug"),
-            ("Story", "Story"),
+            ("Feature", "Feature"),
+            ("Enhancement", "Enhancement"),
             ("Epic", "Epic"),
             ("Spike", "Spike"),
+            ("Story", "Story"),
+            ("Task", "Task"),
         ),
         default="Task",
     )
