@@ -18,6 +18,7 @@ python manage.py makemigrations projects
 python manage.py makemigrations sprints
 python manage.py makemigrations tasks
 python manage.py makemigrations ui
+python manage.py makemigrations services
 python manage.py migrate
 
 exec "$@"
