@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
 
@@ -29,8 +29,8 @@ class ProjectView(View):
     template = "ui/project.html"
 
     def get(self, request, project_id):
-        project = Project.objects.get(
-            pk=project_id, members__in=[request.user], is_active=True
+        project = get_object_or_404(
+            Project, pk=project_id, members__in=[request.user], is_active=True
         )
         return render(request, self.template, {"project": project})
 
@@ -39,7 +39,12 @@ class SprintView(View):
     template = "ui/sprint.html"
 
     def get(self, request, sprint_id):
-        sprint = Sprint.objects.get(pk=sprint_id, project__members__in=[request.user])
+        sprint = get_object_or_404(
+            Sprint,
+            pk=sprint_id,
+            project__members__in=[request.user],
+            project__is_active=True,
+        )
         return render(request, self.template, {"sprint": sprint})
 
 
@@ -47,10 +52,20 @@ class AddTaskToSprintView(View):
     redirect_url = "ui-sprint-view"
 
     def get_sprint(self, id):
-        return Sprint.objects.get(pk=id)
+        return get_object_or_404(
+            Sprint,
+            pk=id,
+            project__members__in=[self.request.user],
+            project__is_active=True,
+        )
 
     def get_task(self, id):
-        return Task.objects.get(pk=id)
+        return get_object_or_404(
+            Task,
+            pk=id,
+            project__members__in=[self.request.user],
+            project__is_active=True,
+        )
 
     def set_task_sprint(self, task, sprint):
         task.sprint = sprint
@@ -60,6 +75,7 @@ class AddTaskToSprintView(View):
         return self.get_sprint(sprint_id), self.get_task(task_id)
 
     def get(self, request, sprint_id, task_id):
+        self.request = request
         sprint, task = self.get_view_objects(sprint_id, task_id)
         self.set_task_sprint(task, sprint)
         return HttpResponseRedirect(
@@ -74,11 +90,17 @@ class AddTaskToSprintView(View):
 
 class RemoveTaskFromSprintView(View):
     def remove_task(self, task_id):
-        task = Task.objects.get(pk=task_id)
+        task = get_object_or_404(
+            Task,
+            pk=task_id,
+            project__members__in=[self.request.user],
+            project__is_active=True,
+        )
         task.sprint = None
         task.save()
 
     def get(self, request, sprint_id, task_id):
+        self.request = request
         self.remove_task(task_id)
         return HttpResponseRedirect(
             reverse(
@@ -94,7 +116,12 @@ class AddTaskView(View):
     template = "ui/add_task.html"
 
     def get(self, request, project_id):
-        project = Project.objects.get(pk=project_id)
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+            members__in=[request.user],
+            is_active=True,
+        )
         add_task_form = AddTaskForm()
         return render(
             request,
@@ -109,7 +136,12 @@ class AddTaskView(View):
         form.save_m2m()
 
     def post(self, request, project_id):
-        project = Project.objects.get(pk=project_id)
+        project = get_object_or_404(
+            Project,
+            pk=project_id,
+            members__in=[request.user],
+            is_active=True,
+        )
         add_task_form = AddTaskForm(request.POST)
         if add_task_form.is_valid():
             self.save_task(add_task_form, project)
@@ -132,7 +164,7 @@ class TaskView(View):
     template = "ui/task.html"
 
     def get(self, request, task_id):
-        task = Task.objects.get(pk=task_id, project__members__in=[request.user])
+        task = get_object_or_404(Task, pk=task_id, project__members__in=[request.user])
         return render(request, self.template, {"task": task})
 
 
@@ -140,7 +172,12 @@ class AddCommentView(View):
     template = "ui/add_comment.html"
 
     def get(self, request, task_id):
-        task = Task.objects.get(pk=task_id)
+        task = get_object_or_404(
+            Task,
+            pk=task_id,
+            project__members__in=[request.user],
+            project__is_active=True,
+        )
         add_comment_form = AddCommentForm()
         return render(
             request,
@@ -155,7 +192,12 @@ class AddCommentView(View):
         comment.save()
 
     def post(self, request, task_id):
-        task = Task.objects.get(pk=task_id)
+        task = get_object_or_404(
+            Task,
+            pk=task_id,
+            project__members__in=[request.user],
+            project__is_active=True,
+        )
         add_comment_form = AddCommentForm(request.POST)
         if add_comment_form.is_valid():
             self.save_comment(add_comment_form, task, request.user)
@@ -186,16 +228,27 @@ class UpdateTaskView(View):
         )
 
         form.fields["sprint"].queryset = Sprint.objects.filter(
-            status="Open", project=task.project
+            status="Open",
+            project=task.project,
+            project__members__in=[self.request.user],
+            project__is_active=True,
         )
 
         for field in fields_exclude_closed:
             form.fields[field].queryset = Task.objects.exclude(
-                Q(status="Closed") | Q(status="Won't Fix")
+                Q(status="Closed") | Q(status="Won't Fix"),
+                project__members__in=[self.request.user],
+                project__is_active=True,
             )
 
     def get(self, request, task_id):
-        task = Task.objects.get(pk=task_id)
+        self.request = request
+        task = get_object_or_404(
+            Task,
+            pk=task_id,
+            project__members__in=[self.request.user],
+            project__is_active=True,
+        )
         update_task_form = UpdateTaskForm(instance=task)
         self.set_form_querysets(update_task_form, task)
         return render(
@@ -205,7 +258,13 @@ class UpdateTaskView(View):
         )
 
     def post(self, request, task_id):
-        task = Task.objects.get(pk=task_id)
+        self.request = request
+        task = get_object_or_404(
+            Task,
+            pk=task_id,
+            project__members__in=[self.request.user],
+            project__is_active=True,
+        )
         update_task_form = UpdateTaskForm(request.POST, instance=task)
         if update_task_form.is_valid():
             update_task_form.save()
@@ -258,7 +317,12 @@ class UpdateSprintView(View):
     template = "ui/update_sprint.html"
 
     def get(self, request, sprint_id):
-        sprint = Sprint.objects.get(pk=sprint_id)
+        sprint = get_object_or_404(
+            Sprint,
+            pk=sprint_id,
+            project__members__in=[request.user],
+            project__is_active=True,
+        )
         update_sprint_form = UpdateSprintForm(instance=sprint)
         return render(
             request,
@@ -267,7 +331,12 @@ class UpdateSprintView(View):
         )
 
     def post(self, request, sprint_id):
-        sprint = Sprint.objects.get(pk=sprint_id)
+        sprint = get_object_or_404(
+            Sprint,
+            pk=sprint_id,
+            project__members__in=[request.user],
+            project__is_active=True,
+        )
         update_sprint_form = UpdateSprintForm(request.POST, instance=sprint)
         if update_sprint_form.is_valid():
             update_sprint_form.save()

@@ -37,6 +37,12 @@
         <h1>Your Devlog</h1>
       </div>
       {% if request.user.is_authenticated %}
+        <div id="user-info" class="container">
+          <span id="user-info-greeting" style="color:blue;">
+            Hi {{ request.user.username }}!
+          </span>
+          
+        </div>
         <div id="nav" class="container mb-4">
           <span>
             <a href="{% url 'ui-index-view' %}">HOME</a>
