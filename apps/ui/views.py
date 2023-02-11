@@ -44,14 +44,27 @@ class SprintView(View):
 
 
 class AddTaskToSprintView(View):
-    def get(self, request, sprint_id, task_id):
-        sprint = Sprint.objects.get(pk=sprint_id)
-        task = Task.objects.get(pk=task_id)
+    redirect_url = "ui-sprint-view"
+
+    def get_sprint(self, id):
+        return Sprint.objects.get(pk=id)
+
+    def get_task(self, id):
+        return Task.objects.get(pk=id)
+
+    def set_task_sprint(self, task, sprint):
         task.sprint = sprint
         task.save()
+
+    def get_view_objects(self, sprint_id, task_id):
+        return self.get_sprint(sprint_id), self.get_task(task_id)
+
+    def get(self, request, sprint_id, task_id):
+        sprint, task = self.get_view_objects(sprint_id, task_id)
+        self.set_task_sprint(task, sprint)
         return HttpResponseRedirect(
             reverse(
-                "ui-sprint-view",
+                self.redirect_url,
                 args=[
                     sprint.id,
                 ],
@@ -60,11 +73,13 @@ class AddTaskToSprintView(View):
 
 
 class RemoveTaskFromSprintView(View):
-    def get(self, request, sprint_id, task_id):
+    def remove_task(self, task_id):
         task = Task.objects.get(pk=task_id)
         task.sprint = None
         task.save()
 
+    def get(self, request, sprint_id, task_id):
+        self.remove_task(task_id)
         return HttpResponseRedirect(
             reverse(
                 "ui-sprint-view",
@@ -87,15 +102,17 @@ class AddTaskView(View):
             context={"project": project, "add_task_form": add_task_form},
         )
 
+    def save_task(self, form, project):
+        task = form.save(commit=False)
+        task.project = project
+        task.save()
+        form.save_m2m()
+
     def post(self, request, project_id):
         project = Project.objects.get(pk=project_id)
         add_task_form = AddTaskForm(request.POST)
         if add_task_form.is_valid():
-            task = add_task_form.save(commit=False)
-            task.project = project
-            task.save()
-            add_task_form.save_m2m()
-
+            self.save_task(add_task_form, project)
             return HttpResponseRedirect(
                 reverse(
                     "ui-project-view",
@@ -104,7 +121,6 @@ class AddTaskView(View):
                     ],
                 )
             )
-        print("IT WAS NOT VALID.")
         return render(
             request,
             self.template,
@@ -132,15 +148,17 @@ class AddCommentView(View):
             context={"task": task, "add_comment_form": add_comment_form},
         )
 
+    def save_comment(self, form, task, user):
+        comment = form.save(commit=False)
+        comment.task = task
+        comment.author = user
+        comment.save()
+
     def post(self, request, task_id):
         task = Task.objects.get(pk=task_id)
         add_comment_form = AddCommentForm(request.POST)
         if add_comment_form.is_valid():
-            comment = add_comment_form.save(commit=False)
-            comment.task = task
-            comment.author = request.user
-            comment.save()
-
+            self.save_comment(add_comment_form, task, request.user)
             return HttpResponseRedirect(
                 reverse(
                     "ui-task-view",
@@ -159,24 +177,27 @@ class AddCommentView(View):
 class UpdateTaskView(View):
     template = "ui/update_task.html"
 
+    def set_form_querysets(self, form, task):
+        fields_exclude_closed = (
+            "blocked_by_tasks",
+            "cloned_by_tasks",
+            "related_to_tasks",
+            "blocking_tasks",
+        )
+
+        form.fields["sprint"].queryset = Sprint.objects.filter(
+            status="Open", project=task.project
+        )
+
+        for field in fields_exclude_closed:
+            form.fields[field].queryset = Task.objects.exclude(
+                Q(status="Closed") | Q(status="Won't Fix")
+            )
+
     def get(self, request, task_id):
         task = Task.objects.get(pk=task_id)
         update_task_form = UpdateTaskForm(instance=task)
-        update_task_form.fields["sprint"].queryset = Sprint.objects.filter(
-            status="Open", project=task.project
-        )
-        update_task_form.fields["blocked_by_tasks"].queryset = Task.objects.exclude(
-            Q(status="Closed") | Q(status="Won't Fix")
-        )
-        update_task_form.fields["cloned_by_tasks"].queryset = Task.objects.exclude(
-            Q(status="Closed") | Q(status="Won't Fix")
-        )
-        update_task_form.fields["related_to_tasks"].queryset = Task.objects.exclude(
-            Q(status="Closed") | Q(status="Won't Fix")
-        )
-        update_task_form.fields["blocking_tasks"].queryset = Task.objects.exclude(
-            Q(status="Closed") | Q(status="Won't Fix")
-        )
+        self.set_form_querysets(update_task_form, task)
         return render(
             request,
             self.template,
@@ -196,7 +217,6 @@ class UpdateTaskView(View):
                     ],
                 )
             )
-
         return render(
             request,
             self.template,
@@ -219,7 +239,6 @@ class AddSprintView(View):
         add_sprint_form = AddSprintForm(request.POST)
         if add_sprint_form.is_valid():
             sprint = add_sprint_form.save()
-
             return HttpResponseRedirect(
                 reverse(
                     "ui-sprint-view",
@@ -252,7 +271,6 @@ class UpdateSprintView(View):
         update_sprint_form = UpdateSprintForm(request.POST, instance=sprint)
         if update_sprint_form.is_valid():
             update_sprint_form.save()
-
             return HttpResponseRedirect(
                 reverse(
                     "ui-sprint-view",
