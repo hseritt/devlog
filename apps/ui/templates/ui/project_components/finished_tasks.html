@@ -13,12 +13,14 @@
       <th>Created</th>
       <th>Status</th>
       <th>Assigned To</th>
+      <th>Date Closed</th>
     </thead>
 
     <tbody>
       {% for task in sprint.task_set.all|task_finished_status  %}
       <tr>
         {% include 'ui/shared_components/task_list.html' %}
+        <td>{{ task.date_closed|date:"m/d/Y" }}</td>
       </tr>
       {% empty %}
       <tr>

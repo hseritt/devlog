@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.utils import IntegrityError
 from django.forms import ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
@@ -41,6 +42,7 @@ class Task(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    date_closed = models.DateTimeField(null=True, blank=True)
 
     status = models.CharField(
         max_length=30,
@@ -92,6 +94,13 @@ class Task(models.Model):
 
     def __str__(self):
         return get_task_title(self)
+
+    def save(self, *args, **kwargs):
+        if self.status == "Closed" or self.status == "Won't Fix":
+            self.date_closed = timezone.now()
+        else:
+            self.date_closed = None
+        super(Task, self).save(*args, **kwargs)
 
 
 class Comment(models.Model):
