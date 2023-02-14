@@ -29,7 +29,7 @@
 </style>
 <div id="content" class="container mb-4">
     <h3>Add New Task for Project: {{ project.name }}</h3>
-    <form action="" method="POST">
+    <form action="{% if sprint %}?sprint={{sprint.id}}{% endif %}" method="POST">
         {% csrf_token %}
         {% for field in add_task_form %}
             <p>{{ field.label }}</p>

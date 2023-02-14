@@ -116,6 +116,8 @@ class AddTaskView(View):
     template = "ui/add_task.html"
 
     def get(self, request, project_id):
+        sprint_id = request.GET.get("sprint", None)
+        sprint = Sprint.objects.get(pk=sprint_id) if sprint_id else None
         project = get_object_or_404(
             Project,
             pk=project_id,
@@ -126,16 +128,24 @@ class AddTaskView(View):
         return render(
             request,
             self.template,
-            context={"project": project, "add_task_form": add_task_form},
+            context={
+                "project": project,
+                "add_task_form": add_task_form,
+                "sprint": sprint,
+            },
         )
 
-    def save_task(self, form, project):
+    def save_task(self, form, project, sprint=None):
         task = form.save(commit=False)
         task.project = project
+        if sprint:
+            task.sprint = sprint
         task.save()
         form.save_m2m()
 
     def post(self, request, project_id):
+        sprint_id = request.GET.get("sprint", None)
+        sprint = Sprint.objects.get(pk=sprint_id) if sprint_id else None
         project = get_object_or_404(
             Project,
             pk=project_id,
@@ -144,7 +154,7 @@ class AddTaskView(View):
         )
         add_task_form = AddTaskForm(request.POST)
         if add_task_form.is_valid():
-            self.save_task(add_task_form, project)
+            self.save_task(add_task_form, project, sprint=sprint)
             return HttpResponseRedirect(
                 reverse(
                     "ui-project-view",
@@ -153,6 +163,7 @@ class AddTaskView(View):
                     ],
                 )
             )
+        print(add_task_form.errors.as_json())
         return render(
             request,
             self.template,
