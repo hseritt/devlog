@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Task, Comment, Category
+from markdownx.admin import MarkdownxModelAdmin
 from .forms import CategoryAdminForm
 
 
@@ -11,7 +12,7 @@ class CommentsInline(admin.TabularInline):
     extra = 0
 
 
-class TaskAdmin(admin.ModelAdmin):
+class TaskAdmin(MarkdownxModelAdmin):
     inlines = [
         CommentsInline,
     ]
@@ -21,6 +22,9 @@ class CategoryAdmin(admin.ModelAdmin):
     form = CategoryAdminForm
 
 
-admin.site.register(Task, TaskAdmin)
-admin.site.register(Comment)
+admin.site.register(
+    Task,
+    TaskAdmin,
+)
+admin.site.register(Comment, MarkdownxModelAdmin)
 admin.site.register(Category, CategoryAdmin)

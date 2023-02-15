@@ -3,11 +3,14 @@ from django.db import models
 from django.db.models import Q, Sum
 from django.apps import apps
 
+from markdownx.models import MarkdownxField
+
 from apps.projects.models import Project
 
 
 class Sprint(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    description = MarkdownxField(null=True, blank=True)
     name = models.CharField(max_length=50, null=True, blank=True)
     started = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)

@@ -5,6 +5,9 @@ from django.db.utils import IntegrityError
 from django.forms import ValidationError
 from django.utils import timezone
 from django.utils.translation import gettext as _
+
+from markdownx.models import MarkdownxField
+
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
 from apps.tasks.utils import get_task_title
@@ -34,7 +37,7 @@ class Category(models.Model):
 
 class Task(models.Model):
     subject = models.CharField(max_length=100, unique=True)
-    description = models.TextField(null=True, blank=True)
+    description = MarkdownxField(null=True, blank=True)
 
     assigned_to = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True
@@ -105,7 +108,7 @@ class Task(models.Model):
 
 class Comment(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = MarkdownxField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

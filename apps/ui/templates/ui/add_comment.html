@@ -44,6 +44,9 @@
               <p>{{ field.label }}</p>
               <p>{{ field }}</p>
           {% endfor %}
+
+          {{ add_comment_form.media }}
+
           <p>
               <button type="submit" class="btn btn-success">Submit</button>
               
@@ -52,6 +55,7 @@
               </button>
           </p>
       </form>
+      
     </div>
     
 </div>

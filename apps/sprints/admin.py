@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from markdownx.admin import MarkdownxModelAdmin
 from apps.tasks.models import Task
 from .models import Sprint
 
@@ -12,7 +12,7 @@ class TasksInline(admin.TabularInline):
     extra = 0
 
 
-class SprintAdmin(admin.ModelAdmin):
+class SprintAdmin(MarkdownxModelAdmin):
     inlines = [
         TasksInline,
     ]

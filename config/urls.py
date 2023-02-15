@@ -22,5 +22,6 @@ urlpatterns = [
         "auth/",
         include("django.contrib.auth.urls"),
     ),
+    path("markdownx/", include("markdownx.urls")),
     path("", include("apps.ui.urls")),
 ]
