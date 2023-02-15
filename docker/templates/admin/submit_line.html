@@ -1,0 +1,12 @@
+{% extends "admin/submit_line.html" %}
+{% load i18n %}
+
+{% block submit-row %}
+    </style>
+    <div class="submit-row">
+        {% if show_save %}<input type="submit" value="{% trans 'Save' %}" class="default" name="_save">{% endif %}
+        {% if show_save_as_new %}<input type="submit" value="{% trans 'Save as New' %}" name="_saveasnew">{% endif %}
+        {% if show_save_and_add_another %}<input type="submit" value="{% trans 'Save and Add Another' %}" name="_addanother">{% endif %}
+        {% if show_save_and_continue %}<input type="submit" value="{% trans 'Save and Continue Editing' %}" name="_continue">{% endif %}
+    </div>
+{% endblock %}

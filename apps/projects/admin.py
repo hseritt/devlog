@@ -1,5 +1,11 @@
 from django.contrib import admin
+
+from apps.core.admin import NoDeleteModelAdmin
 from .models import Project
 
 
-admin.site.register(Project)
+class ProjectAdmin(NoDeleteModelAdmin):
+    pass
+
+
+admin.site.register(Project, ProjectAdmin)
