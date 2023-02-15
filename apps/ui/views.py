@@ -163,7 +163,6 @@ class AddTaskView(View):
                     ],
                 )
             )
-        print(add_task_form.errors.as_json())
         return render(
             request,
             self.template,

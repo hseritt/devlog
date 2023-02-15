@@ -49,6 +49,20 @@ class AddSprintForm(ModelForm):
 
 
 class UpdateSprintForm(ModelForm):
+    status_choices = (
+        ("Open", "Open"),
+        ("Ended", "Ended"),
+    )
+    status = forms.ChoiceField(choices=status_choices)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Limit the choices based on some condition
+        limit_choices = ["Open", "Ended"]
+        self.fields["status"].choices = [
+            c for c in self.fields["status"].choices if c[0] in limit_choices
+        ]
+
     class Meta:
         model = Sprint
         exclude = []

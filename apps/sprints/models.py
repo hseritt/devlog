@@ -16,7 +16,13 @@ class Sprint(models.Model):
     end = models.DateTimeField(null=True, blank=True)
     leader = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(
-        max_length=20, choices=(("Open", "Open"), ("Ended", "Ended")), default="Open"
+        max_length=20,
+        choices=(
+            ("Open", "Open"),
+            ("Ended", "Ended"),
+            ("Not Started", "Not Started/Future"),
+        ),
+        default="Open",
     )
 
     def get_velocity(self):

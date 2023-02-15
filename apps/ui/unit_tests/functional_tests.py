@@ -75,3 +75,26 @@ class UIFunctionalTestCase(TestCase):
         self.assertTrue(
             Task.objects.get(subject="Sample Subject with sprint", sprint=self.sprint)
         )
+
+    def test_add_sprint_with_future(self):
+        """DEVL-36"""
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(
+            reverse("ui-add-sprint-view"),
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(b"Not Started/Future" in response.content)
+
+    def test_add_sprint_no_future(self):
+        """DEVL-36"""
+        self.client.login(username="admin", password="admin")
+        response = self.client.get(
+            reverse(
+                "ui-update-sprint-view",
+                args=[
+                    self.sprint.id,
+                ],
+            ),
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(b"Not Started/Future" in response.content)
