@@ -64,4 +64,5 @@ urlpatterns = [
         login_required(UpdateSprintView.as_view()),
         name="ui-update-sprint-view",
     ),
+    # path(name='ui-add-category-view'),
 ]

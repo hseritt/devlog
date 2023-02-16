@@ -11,17 +11,25 @@ from markdownx.models import MarkdownxField
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
 from apps.tasks.utils import get_task_title
+from apps.projects.models import Project
 
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(null=True, blank=True)
+    project = models.ForeignKey(
+        "projects.Project", on_delete=models.CASCADE, null=True, blank=True
+    )
 
     class Meta:
         verbose_name_plural = "Categories"
 
     def __str__(self):
-        return self.name
+        return (
+            f"{self.project.name} / {self.name}"
+            if self.project
+            else f"General / {self.name}"
+        )
 
     def save(self, *args, **kwargs):
         self.name = self.name.title()
