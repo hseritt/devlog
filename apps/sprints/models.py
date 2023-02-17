@@ -29,18 +29,37 @@ class Sprint(models.Model):
         Task = apps.get_model("tasks", "Task")
         return Task.objects.filter(sprint=self).aggregate(Sum("effort"))["effort__sum"]
 
+    def get_total_tasks(self):
+        Task = apps.get_model("tasks", "Task")
+        return Task.objects.filter(sprint=self).count()
+
+    def get_closed_tasks(self):
+        Task = apps.get_model("tasks", "Task")
+        return Task.objects.filter(
+            Q(status="Closed") | Q(status="Won't Fix"), sprint=self
+        )
+
+    def get_closed_tasks_velocity(self):
+        Task = apps.get_model("tasks", "Task")
+        return Task.objects.filter(
+            Q(status="Closed") | Q(status="Won't Fix"), sprint=self
+        ).aggregate(Sum("effort"))["effort__sum"]
+
     def get_completion_pct(self):
         Task = apps.get_model("tasks", "Task")
         try:
-            return float(
-                len(
-                    Task.objects.filter(
-                        Q(status="Closed") | Q(status="Won't Fix"), sprint=self
-                    )
-                )
-            ) / float(Task.objects.filter(sprint=self).count())
+            return float(len(self.get_closed_tasks())) / float(self.get_total_tasks())
         except ZeroDivisionError:
             return 0
+
+    def get_progress(self):
+        Task = apps.get_model("tasks", "Task")
+        try:
+            return float(self.get_closed_tasks_velocity()) / float(self.get_velocity())
+        except ZeroDivisionError:
+            return 0
+        except TypeError:
+            return None
 
     def __str__(self):
         return f"{self.name}"
