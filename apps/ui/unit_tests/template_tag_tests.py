@@ -85,7 +85,7 @@ class TemplateTagsTestCase(TestCase):
                 self.assertTrue(row.status == "Ended")
 
     def test_sprint_future_status(self):
-        future_sprint = Sprint.objects.create(
+        Sprint.objects.create(
             name="Future Sprint",
             project=self.project,
             status="Future",
@@ -99,7 +99,7 @@ class TemplateTagsTestCase(TestCase):
                 self.assertTrue(row.status == "Future")
 
     def test_task_backlog(self):
-        backlog_task = Task.objects.create(subject="Backlog Task", project=self.project)
+        Task.objects.create(subject="Backlog Task", project=self.project)
         qs = Task.objects.all()
         result = task_backlog(qs, self.project.pk)
         if result:

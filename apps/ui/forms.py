@@ -5,6 +5,24 @@ from apps.sprints.models import Sprint
 
 
 class AddTaskForm(ModelForm):
+    """
+    A form for creating a new task.
+
+    Fields:
+        subject: A required char field for the task subject.
+
+    Excluded Fields:
+        assigned_to: The user who is assigned to the task.
+        project: The project that the task belongs to.
+        sprint: The sprint that the task is associated with.
+        blocked_by_tasks: Tasks that are blocking this task.
+        cloned_by_tasks: Tasks that were cloned from this task.
+        related_to_tasks: Tasks that are related to this task.
+        blocking_tasks: Tasks that are blocked by this task.
+        status: The status of the task.
+        date_closed: The date when the task was closed.
+    """
+
     subject = forms.CharField(max_length=100)
 
     class Meta:
@@ -23,6 +41,14 @@ class AddTaskForm(ModelForm):
 
 
 class AddCommentForm(ModelForm):
+    """
+    A form for adding a new comment to a task.
+
+    Excluded Fields:
+        task: The task that the comment is associated with.
+        author: The user who posted the comment.
+    """
+
     class Meta:
         model = Comment
         exclude = [
@@ -32,6 +58,17 @@ class AddCommentForm(ModelForm):
 
 
 class UpdateTaskForm(ModelForm):
+    """
+    A form for updating an existing task.
+
+    Fields:
+        subject: A required char field for the task subject.
+
+    Excluded Fields:
+        project: The project that the task belongs to.
+        date_closed: The date when the task was closed.
+    """
+
     subject = forms.CharField(max_length=100)
 
     class Meta:
@@ -43,6 +80,20 @@ class UpdateTaskForm(ModelForm):
 
 
 class AddSprintForm(ModelForm):
+    """
+    A form for creating a new sprint.
+
+    Excluded Fields:
+        None
+
+    Widgets:
+        started: A datetime widget for selecting the sprint start time.
+        end: A datetime widget for selecting the sprint end time.
+
+    Args:
+        user: The user who is creating the sprint.
+    """
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
         super(AddSprintForm, self).__init__(*args, **kwargs)
@@ -59,6 +110,19 @@ class AddSprintForm(ModelForm):
 
 
 class UpdateSprintForm(ModelForm):
+    """
+    A form for updating an existing sprint.
+
+    Fields:
+        status: A required field for the sprint status.
+
+    Excluded Fields:
+        None
+
+    Args:
+        None
+    """
+
     status_choices = (
         ("Open", "Open"),
         ("Ended", "Ended"),
