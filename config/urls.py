@@ -16,8 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from rest_framework import routers
+from apps.projects.api_views import ProjectViewSet
+
+from apps.tasks.api_views import TaskViewSet
+
+router = routers.DefaultRouter()
+router.register(r"tasks", TaskViewSet)
+router.register(r"projects", ProjectViewSet)
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls")),
+    path("api/", include(router.urls)),
     path(
         "auth/",
         include("django.contrib.auth.urls"),
