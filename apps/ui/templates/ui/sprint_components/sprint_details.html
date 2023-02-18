@@ -24,7 +24,7 @@
     </tr>
     <tr>
       <th>Started</th>
-      <td>{{ sprint.started }}</td>
+      <td>{{ sprint.started|default:'--' }}</td>
     </tr>
     <tr>
       <th>Ends</th>
@@ -32,7 +32,7 @@
     </tr>
     <tr>
       <th>Leader</th>
-      <td>{{ sprint.leader }}</td>
+      <td>{{ sprint.leader|default:'None' }}</td>
     </tr>
     <tr>
       <th>Status</th>
