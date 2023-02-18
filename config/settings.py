@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "corsheaders",
     "apps.core",
     "apps.projects",
     "apps.sprints",
@@ -44,11 +45,13 @@ INSTALLED_APPS = [
     "apps.ui",
     "apps.services",
     "markdownx",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -149,4 +152,10 @@ LOGOUT_REDIRECT_URL = "/auth/login/"
 MARKDOWNX_MARKDOWN_EXTENSIONS = [
     "markdown.extensions.extra",
     "markdown.extensions.codehilite",
+]
+
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:4200",
 ]
