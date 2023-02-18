@@ -20,7 +20,7 @@ class Sprint(models.Model):
         choices=(
             ("Open", "Open"),
             ("Ended", "Ended"),
-            ("Not Started", "Not Started/Future"),
+            ("Future", "Future"),
         ),
         default="Open",
     )

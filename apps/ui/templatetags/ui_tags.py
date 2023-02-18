@@ -23,6 +23,14 @@ def sprint_open_status(sprint_qs):
     return sprint_qs.filter(status="Open").order_by("-started")
 
 
+def sprint_closed_status(sprint_qs):
+    return sprint_qs.filter(status="Ended").order_by("-started")
+
+
+def sprint_future_status(sprint_qs):
+    return sprint_qs.filter(status="Future").order_by("-started")
+
+
 def task_backlog(task_qs, project_id):
     return Task.objects.filter(project=Project.objects.get(pk=project_id), sprint=None)
 
@@ -30,4 +38,6 @@ def task_backlog(task_qs, project_id):
 register.filter("task_open_status", task_open_status)
 register.filter("task_finished_status", task_finished_status)
 register.filter("sprint_open_status", sprint_open_status)
+register.filter("sprint_closed_status", sprint_closed_status)
+register.filter("sprint_future_status", sprint_future_status)
 register.filter("task_backlog", task_backlog)
