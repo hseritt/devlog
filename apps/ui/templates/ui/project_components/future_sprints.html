@@ -1,0 +1,53 @@
+{% load ui_tags %}
+<style>
+  .sprint-standout {
+    font-weight: bold;
+    background-color: lightgrey !important;
+  }
+</style>
+<div class="container mt-4">
+  <h2 style="text-align: center;">Future Sprints</h2>
+</div>
+
+<div class="container mt-4 mb-4">
+  <table class="table table-bordered">
+    {% for sprint in project.sprint_set.all|sprint_future_status %}
+      <thead class="table-dark">
+        <th>Name</th>
+        <th>Started</th>
+        <th>Ends On</th>
+        <th>Status</th>
+        <th>Leader</th>
+        <th>Velocity</th>
+        <th>Comp. Pct.</th>
+      </thead>
+      <tbody>
+          <tr>
+            <td class="sprint-standout">
+              <a href="{% url 'ui-sprint-view' sprint.id %}">
+                {{ sprint.name }}
+              </a>
+            </td>
+            <td class="sprint-standout">{{ sprint.started|default:'--' }}</td>
+            <td class="sprint-standout">{{ sprint.end|default:'--' }}</td>
+            <td class="sprint-standout">{{ sprint.status }}</td>
+            <td class="sprint-standout">{{ sprint.leader }}</td>
+            <td class="sprint-standout">{{ sprint.get_velocity }}</td>
+            <td class="sprint-standout">{% widthratio sprint.get_completion_pct 1 100 %}%</td>
+          </tr>
+          <tr>
+            <td colspan="7">
+              {% include 'ui/project_components/open_tasks.html' %}
+            </td>
+          </tr>
+          <tr>
+            <td colspan="7">
+              {% include 'ui/project_components/finished_tasks.html' %}
+            </td>
+          </tr>
+      </tbody>
+    {% empty %}
+      <tr><td colspan="7">None</td></tr>
+    {% endfor %}
+  </table>
+</div>

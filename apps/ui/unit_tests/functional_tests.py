@@ -83,7 +83,7 @@ class UIFunctionalTestCase(TestCase):
             reverse("ui-add-sprint-view"),
         )
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(b"Not Started/Future" in response.content)
+        self.assertTrue(b"Future" in response.content)
 
     def test_add_sprint_no_future(self):
         """DEVL-36"""
@@ -97,4 +97,4 @@ class UIFunctionalTestCase(TestCase):
             ),
         )
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(b"Not Started/Future" in response.content)
+        self.assertFalse(b"Future" in response.content)
