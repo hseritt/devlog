@@ -99,14 +99,13 @@ class Sprint(models.Model):
         Returns:
             A float representing the completion percentage of the sprint.
         """
-        Task = apps.get_model("tasks", "Task")
+        apps.get_model("tasks", "Task")
         try:
             return float(len(self.get_closed_tasks())) / float(self.get_total_tasks())
         except ZeroDivisionError:
             return 0
 
     def get_progress(self):
-        Task = apps.get_model("tasks", "Task")
         try:
             return float(self.get_closed_tasks_velocity()) / float(self.get_velocity())
         except ZeroDivisionError:
