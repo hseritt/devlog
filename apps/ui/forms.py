@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm
+from django.forms import DateTimeInput, ModelForm
 from apps.tasks.models import Task, Comment
 from apps.sprints.models import Sprint
 
@@ -43,9 +43,19 @@ class UpdateTaskForm(ModelForm):
 
 
 class AddSprintForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super(AddSprintForm, self).__init__(*args, **kwargs)
+        if user:
+            self.fields["leader"].initial = user.id
+
     class Meta:
         model = Sprint
         exclude = []
+        widgets = {
+            "started": DateTimeInput(attrs={"type": "datetime-local"}),
+            "end": DateTimeInput(attrs={"type": "datetime-local"}),
+        }
 
 
 class UpdateSprintForm(ModelForm):
