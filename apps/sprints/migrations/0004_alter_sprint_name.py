@@ -5,15 +5,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sprints', '0003_alter_sprint_name'),
+        ("sprints", "0003_alter_sprint_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='sprint',
-            name='name',
-            field=models.CharField(default=apps.sprints.models.Sprint.default_sprint_name, max_length=50, unique=True),
+            model_name="sprint",
+            name="name",
+            field=models.CharField(
+                default=apps.sprints.models.Sprint.default_sprint_name, max_length=50
+            ),
         ),
     ]
