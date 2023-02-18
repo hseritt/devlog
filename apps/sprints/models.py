@@ -46,14 +46,12 @@ class Sprint(models.Model):
         ).aggregate(Sum("effort"))["effort__sum"]
 
     def get_completion_pct(self):
-        Task = apps.get_model("tasks", "Task")
         try:
             return float(len(self.get_closed_tasks())) / float(self.get_total_tasks())
         except ZeroDivisionError:
             return 0
 
     def get_progress(self):
-        Task = apps.get_model("tasks", "Task")
         try:
             return float(self.get_closed_tasks_velocity()) / float(self.get_velocity())
         except ZeroDivisionError:
