@@ -301,4 +301,4 @@ class UIUrlsBaseTestCase(TestCase):
         self.client.logout()
         self.client.login(username="testuser1", password="test")
         response = self.client.get(reverse(url))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)

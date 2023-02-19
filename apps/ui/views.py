@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
@@ -297,10 +297,19 @@ class UpdateTaskView(CustomLoginRequiredMixin, View):
         )
 
 
+def check_project_membership(user):
+    user_projects = Project.objects.filter(members=user)
+    if not user_projects.exists():
+        raise Http404(
+            "User is not a member of any project. User must be a member of a project in order to access this page."
+        )
+
+
 class AddSprintView(CustomLoginRequiredMixin, View):
     template = "ui/add_sprint.html"
 
     def get(self, request):
+        check_project_membership(request.user)
         add_sprint_form = AddSprintForm(user=request.user)
         return render(
             request,
@@ -309,6 +318,7 @@ class AddSprintView(CustomLoginRequiredMixin, View):
         )
 
     def post(self, request):
+        check_project_membership(request.user)
         add_sprint_form = AddSprintForm(request.POST, user=request.user)
         if add_sprint_form.is_valid():
             sprint = add_sprint_form.save()

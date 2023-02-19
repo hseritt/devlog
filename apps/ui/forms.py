@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import DateTimeInput, ModelForm
+from apps.projects.models import Project
 from apps.tasks.models import Task, Comment
 from apps.sprints.models import Sprint
 
@@ -101,6 +102,7 @@ class AddSprintForm(ModelForm):
         super(AddSprintForm, self).__init__(*args, **kwargs)
         if user:
             self.fields["leader"].initial = user.id
+            self.fields["project"].queryset = Project.objects.filter(members__in=[user])
 
     class Meta:
         model = Sprint

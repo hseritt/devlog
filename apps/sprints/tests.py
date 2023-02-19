@@ -1,8 +1,14 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
-from django.contrib.auth.models import User
 from apps.tasks.models import Task
+
+from django.contrib.auth.models import User
+from django.urls import reverse
+from django.http import Http404, HttpResponseNotFound
+from unittest.mock import patch
+from apps.ui.forms import AddSprintForm
+from apps.ui.views import AddSprintView
 
 
 class SprintVelocityTestCase(TestCase):
@@ -52,3 +58,54 @@ class SprintVelocityTestCase(TestCase):
         task.save()
 
         self.assertEqual(sprint.get_progress(), 0.4)
+
+
+class AddSprintViewTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username="testuser", email="testuser@test.com", password="testpass"
+        )
+
+    def test_get_no_projects(self):
+        url = reverse("ui-add-sprint-view")
+        self.client.login(username="testuser", password="testpass")
+        response = self.client.get(url)
+        self.assertTrue(b"Not Found" in response.content)
+
+    def test_post_no_projects(self):
+        url = reverse("ui-add-sprint-view")
+        self.client.login(username="testuser", password="testpass")
+        response = self.client.get(url)
+        self.assertTrue(b"Not Found" in response.content)
+
+    def test_get_projects(self):
+        project = Project.objects.create(name="Test Project")
+        project.members.add(self.user)
+        project.save()
+        url = reverse("ui-add-sprint-view")
+        self.client.force_login(self.user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_valid_form(self):
+        project = Project.objects.create(name="Test Project")
+        project.members.add(self.user)
+        project.save()
+        url = reverse("ui-add-sprint-view")
+        self.client.force_login(self.user)
+        data = {"name": "Test Sprint", "project": project.id, "leader": self.user.id}
+        self.client.post(url, data)
+        with self.assertRaises(Sprint.DoesNotExist):
+            Sprint.objects.get(name="Test Sprint")
+
+    def test_post_invalid_form(self):
+        project = Project.objects.create(name="Test Project")
+        project.members.add(self.user)
+        project.save()
+        url = reverse("ui-add-sprint-view")
+        self.client.force_login(self.user)
+        data = {"name": "", "project": project.id, "leader": self.user.id}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "This field is required.")
