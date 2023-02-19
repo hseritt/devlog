@@ -8,7 +8,6 @@ from django.utils.translation import gettext as _
 
 from markdownx.models import MarkdownxField
 
-from apps.projects.models import Project
 from apps.sprints.models import Sprint
 from apps.tasks.utils import get_task_title
 from apps.projects.models import Project

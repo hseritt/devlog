@@ -12,6 +12,7 @@ from .views import (
     UpdateTaskView,
     AddSprintView,
     UpdateSprintView,
+    AddCategoryView,
 )
 
 urlpatterns = [
@@ -64,5 +65,9 @@ urlpatterns = [
         login_required(UpdateSprintView.as_view()),
         name="ui-update-sprint-view",
     ),
-    # path(name='ui-add-category-view'),
+    path(
+        "project/<int:project_id>/category/add/",
+        login_required(AddCategoryView.as_view()),
+        name="ui-add-category-view",
+    ),
 ]
