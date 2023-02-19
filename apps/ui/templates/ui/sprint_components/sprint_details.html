@@ -23,6 +23,10 @@
       <td>{{ sprint.name }}</td>
     </tr>
     <tr>
+      <th>Description</th>
+      <td>{{ sprint.description }}</td>
+    </tr>
+    <tr>
       <th>Started</th>
       <td>{{ sprint.started }}</td>
     </tr>
@@ -43,8 +47,13 @@
       <td>{{ sprint.get_velocity }}</td>
     </tr>
     <tr>
-      <th>Percentage Complete</th>
-      <td>{% widthratio sprint.get_completion_pct 1 100 %}%</td>
+      <th>Task Completion Pct.</th>
+      <td>{% if sprint.get_completion_pct %}{% widthratio sprint.get_completion_pct 1 100 %}%{% endif %}</td>
     </tr>
+    <tr>
+      <th>Progress Pct.</th>
+      <td>{% if sprint.get_progress %}{% widthratio sprint.get_progress 1 100 %}%{% endif %}</td>
+    </tr>
+    
   </table>
 </div>

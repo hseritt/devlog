@@ -40,3 +40,15 @@ class SprintVelocityTestCase(TestCase):
         task.save()
 
         self.assertEqual(sprint.get_completion_pct(), 0.2)
+
+    def test_progress(self):
+        sprint = Sprint.objects.get(name="Sprint 1")
+        task = Task.objects.get(subject="Issue number 1")
+        task.status = "Closed"
+        task.save()
+
+        task = Task.objects.get(subject="Issue number 2")
+        task.status = "Closed"
+        task.save()
+
+        self.assertEqual(sprint.get_progress(), 0.4)
