@@ -136,9 +136,10 @@ class AddTaskView(CustomLoginRequiredMixin, View):
             },
         )
 
-    def save_task(self, form, project, sprint=None):
+    def save_task(self, form, project, request, sprint=None):
         task = form.save(commit=False)
         task.project = project
+        task.last_action_by = request.user
         if sprint:
             task.sprint = sprint
         task.save()
@@ -155,7 +156,7 @@ class AddTaskView(CustomLoginRequiredMixin, View):
         )
         add_task_form = AddTaskForm(request.POST)
         if add_task_form.is_valid():
-            self.save_task(add_task_form, project, sprint=sprint)
+            self.save_task(add_task_form, project, request, sprint=sprint)
             return HttpResponseRedirect(
                 reverse(
                     "ui-project-view",
@@ -278,7 +279,9 @@ class UpdateTaskView(CustomLoginRequiredMixin, View):
         )
         update_task_form = UpdateTaskForm(request.POST, instance=task)
         if update_task_form.is_valid():
-            update_task_form.save()
+            task = update_task_form.save(commit=False)
+            task.last_action_by = request.user
+            task.save()
             return HttpResponseRedirect(
                 reverse(
                     "ui-task-view",

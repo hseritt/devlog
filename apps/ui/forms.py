@@ -37,6 +37,7 @@ class AddTaskForm(ModelForm):
             "blocking_tasks",
             "status",
             "date_closed",
+            "last_action_by",
         ]
 
 
@@ -76,6 +77,7 @@ class UpdateTaskForm(ModelForm):
         exclude = [
             "project",
             "date_closed",
+            "last_action_by",
         ]
 
 

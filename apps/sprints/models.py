@@ -93,6 +93,13 @@ class Sprint(models.Model):
         ).aggregate(Sum("effort"))["effort__sum"]
 
     def get_completion_pct(self):
+        """
+        Get the completion percentage of the sprint.
+
+        Returns:
+            A float representing the completion percentage of the sprint.
+        """
+        apps.get_model("tasks", "Task")
         try:
             return float(len(self.get_closed_tasks())) / float(self.get_total_tasks())
         except ZeroDivisionError:
