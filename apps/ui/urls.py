@@ -64,7 +64,7 @@ urlpatterns = [
     ),
     path(
         "project/<int:project_id>/category/add/",
-        login_required(AddCategoryView.as_view()),
+        AddCategoryView.as_view(),
         name="ui-add-category-view",
     ),
 ]
