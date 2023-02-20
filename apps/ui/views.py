@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import View
+from apps.core.views import CustomLoginRequiredMixin
 
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
@@ -17,7 +18,7 @@ from .forms import (
 )
 
 
-class IndexView(View):
+class IndexView(CustomLoginRequiredMixin, View):
     template = "ui/index.html"
 
     def get(self, request):
@@ -25,7 +26,7 @@ class IndexView(View):
         return render(request, self.template, {"project_qs": project_qs})
 
 
-class ProjectView(View):
+class ProjectView(CustomLoginRequiredMixin, View):
     template = "ui/project.html"
 
     def get(self, request, project_id):
@@ -35,7 +36,7 @@ class ProjectView(View):
         return render(request, self.template, {"project": project})
 
 
-class SprintView(View):
+class SprintView(CustomLoginRequiredMixin, View):
     template = "ui/sprint.html"
 
     def get(self, request, sprint_id):
@@ -48,7 +49,7 @@ class SprintView(View):
         return render(request, self.template, {"sprint": sprint})
 
 
-class AddTaskToSprintView(View):
+class AddTaskToSprintView(CustomLoginRequiredMixin, View):
     redirect_url = "ui-sprint-view"
 
     def get_sprint(self, id):
@@ -88,7 +89,7 @@ class AddTaskToSprintView(View):
         )
 
 
-class RemoveTaskFromSprintView(View):
+class RemoveTaskFromSprintView(CustomLoginRequiredMixin, View):
     def remove_task(self, task_id):
         task = get_object_or_404(
             Task,
@@ -112,7 +113,7 @@ class RemoveTaskFromSprintView(View):
         )
 
 
-class AddTaskView(View):
+class AddTaskView(CustomLoginRequiredMixin, View):
     template = "ui/add_task.html"
 
     def get(self, request, project_id):
@@ -171,7 +172,7 @@ class AddTaskView(View):
         )
 
 
-class TaskView(View):
+class TaskView(CustomLoginRequiredMixin, View):
     template = "ui/task.html"
 
     def get(self, request, task_id):
@@ -179,7 +180,7 @@ class TaskView(View):
         return render(request, self.template, {"task": task})
 
 
-class AddCommentView(View):
+class AddCommentView(CustomLoginRequiredMixin, View):
     template = "ui/add_comment.html"
 
     def get(self, request, task_id):
@@ -227,7 +228,7 @@ class AddCommentView(View):
         )
 
 
-class UpdateTaskView(View):
+class UpdateTaskView(CustomLoginRequiredMixin, View):
     template = "ui/update_task.html"
 
     def set_form_querysets(self, form, task):
@@ -296,7 +297,7 @@ class UpdateTaskView(View):
         )
 
 
-class AddSprintView(View):
+class AddSprintView(CustomLoginRequiredMixin, View):
     template = "ui/add_sprint.html"
 
     def get(self, request):
@@ -326,7 +327,7 @@ class AddSprintView(View):
         )
 
 
-class UpdateSprintView(View):
+class UpdateSprintView(CustomLoginRequiredMixin, View):
     template = "ui/update_sprint.html"
 
     def get(self, request, sprint_id):
