@@ -49,7 +49,12 @@
             <p class="form-field">
                 {{ field.label }}
                 {% if field.field.required %}
-                    <span class="text-danger">*</span>
+                  <span class="text-danger">*</span>
+                {% endif %}
+                {% if field.help_text %}
+                  <span style="font-style: italic;">
+                    ({{ field.help_text }})
+                  </span>
                 {% endif %}
                 {% if field.errors %}
                   <span class="text-danger">
