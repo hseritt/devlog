@@ -297,7 +297,13 @@ class AddSprintView(View):
     template = "ui/add_sprint.html"
 
     def get(self, request):
-        add_sprint_form = AddSprintForm(user=request.user)
+        if Sprint.objects.filter(status="Open").exists():
+            add_sprint_form = AddSprintForm(
+                request.POST, user=request.user, status="Future"
+            )
+        else:
+            add_sprint_form = AddSprintForm(request.POST, user=request.user)
+
         return render(
             request,
             self.template,
@@ -305,7 +311,12 @@ class AddSprintView(View):
         )
 
     def post(self, request):
-        add_sprint_form = AddSprintForm(request.POST, user=request.user)
+        if Sprint.objects.filter(status="Open").exists():
+            add_sprint_form = AddSprintForm(
+                request.POST, user=request.user, status="Future"
+            )
+        else:
+            add_sprint_form = AddSprintForm(request.POST, user=request.user)
         if add_sprint_form.is_valid():
             sprint = add_sprint_form.save()
             return HttpResponseRedirect(

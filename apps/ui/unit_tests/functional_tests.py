@@ -1,3 +1,4 @@
+import datetime
 from django.utils import timezone
 from urllib.parse import urlencode
 from django.contrib.auth.models import User
@@ -148,3 +149,53 @@ class AddSprintViewTest(TestCase):
         response = self.client.post(self.add_sprint_url, data=data)
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Sprint.objects.filter(name="Test Sprint"))
+
+
+class AddSprintViewTestStatus(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.project = Project.objects.create(name="Test Project", manager=self.user)
+        self.client = Client()
+
+    def test_add_sprint_form(self):
+        # Create an open sprint
+        self.client.login(username="testuser", password="testpass")
+        Sprint.objects.create(
+            name="Open Sprint", leader=self.user, status="Open", project=self.project
+        )
+
+        # Call the AddSprintView with the test user
+        response = self.client.get(
+            reverse("ui-add-sprint-view"), {"user": self.user.id}
+        )
+
+        # Check that the response contains the Future option in the status field
+        self.assertContains(response, '<option value="Future">Future</option>')
+
+        # Check that the response contains the help text for the status field
+        self.assertContains(
+            response,
+            "No open sprints can be created if there are any sprints currently open.",
+        )
+
+        # Check that the response contains the form submission button
+        self.assertTrue(b"Submit" in response.content)
+
+    def test_add_sprint_form_no_open_sprints(self):
+        # Call the AddSprintView with the test user
+        self.client.login(username="testuser", password="testpass")
+        response = self.client.get(
+            reverse("ui-add-sprint-view"), {"user": self.user.id}
+        )
+
+        # Check that the response does contain the Open option in the status field
+        self.assertTrue(b"Open" in response.content)
+
+        # Check that the response does not contain the help text for the status field
+        self.assertNotContains(
+            response,
+            "No open sprints can be created if there are any sprints currently open.",
+        )
+
+        # Check that the response contains the form submission button
+        self.assertTrue(b"Submit" in response.content)
