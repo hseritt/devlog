@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import DateTimeInput, ModelForm
-from apps.tasks.models import Task, Comment
+from apps.tasks.models import Task, Comment, Category
 from apps.sprints.models import Sprint
 
 
@@ -142,3 +142,9 @@ class UpdateSprintForm(ModelForm):
     class Meta:
         model = Sprint
         exclude = []
+
+
+class AddCategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        exclude = ["project"]
