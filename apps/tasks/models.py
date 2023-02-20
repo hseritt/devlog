@@ -13,6 +13,12 @@ from apps.tasks.utils import get_task_title
 from apps.projects.models import Project
 
 
+from django.db import models
+from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(null=True, blank=True)
@@ -21,7 +27,7 @@ class Category(models.Model):
     )
 
     class Meta:
-        verbose_name_plural = "Categories"
+        verbose_name_plural = _("Categories")
 
     def __str__(self):
         return (
@@ -33,11 +39,11 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         self.name = self.name.title()
         try:
-            super(Category, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
         except IntegrityError:
             raise ValidationError(
                 _(
-                    f'Categories are saved with titlecase(). A category with this name ("{self.name}") already exists.'
+                    f"A category with name '{self.name}' already exists. Please choose a different name."
                 )
             )
 
