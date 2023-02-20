@@ -1,5 +1,7 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
+
+User = get_user_model()
 
 
 class Project(models.Model):
@@ -18,21 +20,18 @@ class Project(models.Model):
         ),
         default="R&D",
     )
-    members = models.ManyToManyField(User, blank=True, related_name="project_members")
+    members = models.ManyToManyField(User, blank=True, related_name="projects")
     manager = models.ForeignKey(
         User,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name="project_manager",
+        related_name="managed_projects",
     )
 
     class Meta:
         ordering = ("name",)
 
     def __str__(self):
-        try:
-            title = f"{self.id } / {self.name} / {self.prefix}"
-        except AttributeError:
-            title = f"{self.id } / {self.name}"
-        return title
+        prefix_str = f" / {self.prefix}" if self.prefix else ""
+        return f"{self.id} / {self.name}{prefix_str}"

@@ -1,8 +1,7 @@
 from django.contrib import admin
-
+from markdownx.admin import MarkdownxModelAdmin
 from apps.core.admin import NoDeleteModelAdmin
 from .models import Task, Comment, Category
-from markdownx.admin import MarkdownxModelAdmin
 from .forms import CategoryAdminForm
 
 
@@ -14,19 +13,16 @@ class CommentsInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Task)
 class TaskAdmin(MarkdownxModelAdmin, NoDeleteModelAdmin):
-    inlines = [
-        CommentsInline,
-    ]
+    inlines = [CommentsInline]
 
 
+@admin.register(Comment)
+class CommentAdmin(MarkdownxModelAdmin):
+    pass
+
+
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     form = CategoryAdminForm
-
-
-admin.site.register(
-    Task,
-    TaskAdmin,
-)
-admin.site.register(Comment, MarkdownxModelAdmin)
-admin.site.register(Category, CategoryAdmin)

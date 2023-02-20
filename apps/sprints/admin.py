@@ -9,15 +9,15 @@ from .models import Sprint
 class TaskForm(ModelForm):
     class Meta:
         model = Task
-        exclude = ("sprint",)  # exclude the foreign key field
+        exclude = ("sprint",)
 
 
 TaskModelInlineFormSet = inlineformset_factory(
     Sprint,
     Task,
     form=TaskForm,
-    extra=0,  # don't show extra blank forms
-    can_delete=False,  # don't allow deletion of existing records
+    extra=0,
+    can_delete=False,
 )
 
 
@@ -40,9 +40,7 @@ class TasksInline(admin.TabularInline):
     max_num = 0
 
 
-class SprintAdmin(NoDeleteModelAdmin):
+@admin.register(Sprint)
+class SprintAdmin(NoDeleteModelAdmin, MarkdownxModelAdmin):
     inlines = [TasksInline]
     show_delete_link = False
-
-
-admin.site.register(Sprint, SprintAdmin)
