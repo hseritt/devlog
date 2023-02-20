@@ -2,6 +2,7 @@ from django import forms
 from django.forms import DateTimeInput, ModelForm
 from apps.projects.models import Project
 from apps.tasks.models import Task, Comment
+from apps.tasks.models import Task, Comment, Category
 from apps.sprints.models import Sprint
 
 
@@ -99,10 +100,16 @@ class AddSprintForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
+        status = kwargs.pop("status", None)
         super(AddSprintForm, self).__init__(*args, **kwargs)
         if user:
             self.fields["leader"].initial = user.id
             self.fields["project"].queryset = Project.objects.filter(members__in=[user])
+        if status:
+            self.fields["status"].choices = (("Future", "Future"),)
+            self.fields[
+                "status"
+            ].help_text = "No open sprints can be created if there are any sprints currently open."
 
     class Meta:
         model = Sprint
@@ -144,3 +151,9 @@ class UpdateSprintForm(ModelForm):
     class Meta:
         model = Sprint
         exclude = []
+
+
+class AddCategoryForm(ModelForm):
+    class Meta:
+        model = Category
+        exclude = ["project"]

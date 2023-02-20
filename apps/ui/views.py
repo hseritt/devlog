@@ -15,6 +15,7 @@ from .forms import (
     UpdateTaskForm,
     AddSprintForm,
     UpdateSprintForm,
+    AddCategoryForm,
 )
 
 
@@ -376,4 +377,38 @@ class UpdateSprintView(CustomLoginRequiredMixin, View):
             request,
             self.template,
             context={"sprint": sprint, "update_sprint_form": update_sprint_form},
+        )
+
+
+class AddCategoryView(View):
+    template = "ui/add_category.html"
+
+    def get(self, request, project_id):
+        project = Project.objects.get(pk=project_id)
+        add_category_form = AddCategoryForm()
+        return render(
+            request,
+            self.template,
+            context={"add_category_form": add_category_form, "project": project},
+        )
+
+    def post(self, request, project_id):
+        project = Project.objects.get(pk=project_id)
+        add_category_form = AddCategoryForm(request.POST)
+        if add_category_form.is_valid():
+            category = add_category_form.save(commit=False)
+            category.project = project
+            category.save()
+            return HttpResponseRedirect(
+                reverse(
+                    "ui-add-task-view",
+                    args=[
+                        project.id,
+                    ],
+                )
+            )
+        return render(
+            request,
+            self.template,
+            context={"add_category_form": add_category_form, "project": project},
         )

@@ -1,13 +1,16 @@
+import datetime
 from django.utils import timezone
 from urllib.parse import urlencode
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
-from apps.tasks.models import Task, Comment
+from apps.tasks.models import Task, Comment, Category
 from apps.ui.forms import AddSprintForm
+from apps.ui.forms import AddCategoryForm
+from apps.ui.views import AddCategoryView
 
 
 class UIFunctionalTestCase(TestCase):
@@ -150,3 +153,106 @@ class AddSprintViewTest(TestCase):
         response = self.client.post(self.add_sprint_url, data=data)
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Sprint.objects.filter(name="Test Sprint"))
+
+
+class AddCategoryViewTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(username="testuser", password="12345")
+        self.project = Project.objects.create(
+            name="Test Project",
+            prefix="TP",
+            description="Test project description",
+            manager=self.user,
+        )
+        self.add_category_url = reverse("ui-add-category-view", args=[self.project.id])
+        self.add_category_form_data = {
+            "name": "Test Category",
+            "description": "Test category description",
+        }
+
+    def test_get(self):
+        request = self.factory.get(self.add_category_url)
+        request.user = self.user
+        response = AddCategoryView.as_view()(request, project_id=self.project.id)
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_success(self):
+        request = self.factory.post(
+            self.add_category_url, data=self.add_category_form_data
+        )
+        request.user = self.user
+        response = AddCategoryView.as_view()(request, project_id=self.project.id)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            response.url, reverse("ui-add-task-view", args=[self.project.id])
+        )
+        self.assertEqual(Category.objects.count(), 1)
+        category = Category.objects.first()
+        self.assertEqual(category.name, self.add_category_form_data["name"])
+        self.assertEqual(
+            category.description, self.add_category_form_data["description"]
+        )
+        self.assertEqual(category.project, self.project)
+
+    def test_post_failure(self):
+        add_category_form_data = {"name": ""}
+        request = self.factory.post(self.add_category_url, data=add_category_form_data)
+        request.user = self.user
+        response = AddCategoryView.as_view()(request, project_id=self.project.id)
+
+        self.assertEqual(response.status_code, 200)
+
+
+class AddSprintViewTestStatus(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.project = Project.objects.create(name="Test Project", manager=self.user)
+        self.project.members.add(self.user)
+        self.project.save()
+        self.client = Client()
+
+    def test_add_sprint_form(self):
+        # Create an open sprint
+        self.client.login(username="testuser", password="testpass")
+        Sprint.objects.create(
+            name="Open Sprint", leader=self.user, status="Open", project=self.project
+        )
+
+        # Call the AddSprintView with the test user
+        response = self.client.get(
+            reverse("ui-add-sprint-view"), {"user": self.user.id}
+        )
+
+        # Check that the response contains the Future option in the status field
+        self.assertContains(response, '<option value="Future">Future</option>')
+
+        # Check that the response contains the help text for the status field
+        print(response.content)
+        self.assertContains(
+            response,
+            "No open sprints can be created if there are any sprints currently open.",
+        )
+
+        # Check that the response contains the form submission button
+        self.assertTrue(b"Submit" in response.content)
+
+    def test_add_sprint_form_no_open_sprints(self):
+        # Call the AddSprintView with the test user
+        self.client.login(username="testuser", password="testpass")
+        response = self.client.get(
+            reverse("ui-add-sprint-view"), {"user": self.user.id}
+        )
+
+        # Check that the response does contain the Open option in the status field
+        self.assertTrue(b"Open" in response.content)
+
+        # Check that the response does not contain the help text for the status field
+        self.assertNotContains(
+            response,
+            "No open sprints can be created if there are any sprints currently open.",
+        )
+
+        # Check that the response contains the form submission button
+        self.assertTrue(b"Submit" in response.content)

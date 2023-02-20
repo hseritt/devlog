@@ -33,10 +33,10 @@
 
 </style>
 <div id="content" class="container mb-4">
-    <h3>Start New Sprint</h3>
-    {% if add_sprint_form.errors %}
+    <h3>Add New Category For Project: {{ project.name }}</h3>
+    {% if add_category_form.errors %}
       <div class="alert alert-danger">
-        {% for field_errors in add_sprint_form.errors.values %}
+        {% for field_errors in add_category_form.errors.values %}
           {% for error in field_errors %}
             {{ error }}
           {% endfor %}
@@ -45,16 +45,11 @@
     {% endif %}
     <form action="" method="POST">
         {% csrf_token %}
-        {% for field in add_sprint_form %}
+        {% for field in add_category_form %}
             <p class="form-field">
                 {{ field.label }}
                 {% if field.field.required %}
-                  <span class="text-danger">*</span>
-                {% endif %}
-                {% if field.help_text %}
-                  <span style="font-style: italic;">
-                    ({{ field.help_text }})
-                  </span>
+                    <span class="text-danger">*</span>
                 {% endif %}
                 {% if field.errors %}
                   <span class="text-danger">
@@ -66,11 +61,10 @@
               {{ field }} 
             </p>
         {% endfor %}
-        {{ add_sprint_form.media }}
         <p class="submit-row">
             <button type="submit" class="btn btn-success">Submit</button>
             
-            <button class="btn btn-warning" onclick=window.location.href="{% url 'ui-index-view' %}">
+            <button class="btn btn-warning" onclick=window.location.href="{% url 'ui-add-task-view' project.id %}">
                 Cancel
             </button>
         </p>
