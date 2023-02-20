@@ -108,11 +108,7 @@ class Task(models.Model):
     )
 
     sprint = models.ForeignKey(
-        Sprint,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="task_sprint",
+        Sprint, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks"
     )
 
     blocked_by_tasks = models.ManyToManyField("self", blank=True)

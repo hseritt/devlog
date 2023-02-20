@@ -17,7 +17,7 @@
     </thead>
 
     <tbody>
-      {% for task in sprint.task_set.all|task_finished_status  %}
+      {% for task in sprint.tasks.all|task_finished_status  %}
       <tr>
         {% include 'ui/shared_components/task_list.html' %}
         <td>{{ task.date_closed|date:"m/d/Y" }}</td>
