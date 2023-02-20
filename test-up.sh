@@ -18,6 +18,7 @@
 # This will execute the script and set up the Docker containers used for running tests for the "Devlog" project.
 
 pipenv requirements > docker/requirements.txt
+rm -rf docker/apps docker/config docker/manage.py docker/staticfiles docker/templates
 cp -rf apps config manage.py staticfiles templates docker/.
 docker-compose -f docker/docker-compose.test.yml up --build
 
