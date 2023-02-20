@@ -14,12 +14,6 @@ from apps.tasks.utils import get_task_title
 from apps.projects.models import Project
 
 
-from django.db import models
-from django.db.utils import IntegrityError
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
-
-
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(null=True, blank=True)
