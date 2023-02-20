@@ -107,6 +107,8 @@ class AddSprintViewTest(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username="testuser", password="testpass")
         self.project = Project.objects.create(name="Test Project", manager=self.user)
+        self.project.members.add(self.user)
+        self.project.save()
         self.add_sprint_url = reverse("ui-add-sprint-view")
 
     def test_add_sprint_view_get(self):

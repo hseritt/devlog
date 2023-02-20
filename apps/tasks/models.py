@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from markdownx.models import MarkdownxField
+from apps.core.lib.system import get_system_user
 
 from apps.projects.models import Project
 from apps.sprints.models import Sprint
@@ -40,7 +41,11 @@ class Task(models.Model):
     description = MarkdownxField(null=True, blank=True)
 
     assigned_to = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=True, blank=True
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="task_assigned_to",
     )
 
     created = models.DateTimeField(auto_now_add=True)
@@ -60,6 +65,14 @@ class Task(models.Model):
             ("Won't Fix", "Won't Fix"),
         ),
         default="New",
+    )
+
+    last_action_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="task_last_action_by",
     )
 
     effort = models.IntegerField(
@@ -99,6 +112,22 @@ class Task(models.Model):
         return get_task_title(self)
 
     def save(self, *args, **kwargs):
+        if self.pk:
+            # retrieve the old status from the database
+            old_task = Task.objects.get(pk=self.pk)
+            old_status = old_task.status
+            new_status = self.status
+
+            # check if the status has changed
+            if old_status != new_status:
+                # do something here, like logging the status change
+                content = f"Task status changed from {old_status} to {new_status} by {self.last_action_by}"
+                Comment.objects.create(
+                    task=self,
+                    author=get_system_user(),
+                    content=content,
+                )
+
         if self.status == "Closed" or self.status == "Won't Fix":
             self.date_closed = timezone.now()
         else:

@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import DateTimeInput, ModelForm
+from apps.projects.models import Project
 from apps.tasks.models import Task, Comment
 from apps.sprints.models import Sprint
 
@@ -37,6 +38,7 @@ class AddTaskForm(ModelForm):
             "blocking_tasks",
             "status",
             "date_closed",
+            "last_action_by",
         ]
 
 
@@ -76,6 +78,7 @@ class UpdateTaskForm(ModelForm):
         exclude = [
             "project",
             "date_closed",
+            "last_action_by",
         ]
 
 
@@ -99,6 +102,7 @@ class AddSprintForm(ModelForm):
         super(AddSprintForm, self).__init__(*args, **kwargs)
         if user:
             self.fields["leader"].initial = user.id
+            self.fields["project"].queryset = Project.objects.filter(members__in=[user])
 
     class Meta:
         model = Sprint
