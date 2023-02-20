@@ -303,11 +303,9 @@ class AddSprintView(CustomLoginRequiredMixin, View):
 
     def get(self, request):
         if Sprint.objects.filter(status="Open").exists():
-            add_sprint_form = AddSprintForm(
-                request.POST, user=request.user, status="Future"
-            )
+            add_sprint_form = AddSprintForm(user=request.user, status="Future")
         else:
-            add_sprint_form = AddSprintForm(request.POST, user=request.user)
+            add_sprint_form = AddSprintForm(user=request.user)
 
         return render(
             request,
