@@ -100,7 +100,13 @@ class Task(models.Model):
         Project, on_delete=models.CASCADE, null=True, blank=True
     )
 
-    sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, null=True, blank=True)
+    sprint = models.ForeignKey(
+        Sprint,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="task_sprint",
+    )
 
     blocked_by_tasks = models.ManyToManyField("self", blank=True)
     cloned_by_tasks = models.ManyToManyField("self", blank=True)
@@ -120,19 +126,19 @@ class Task(models.Model):
 
             # check if the status has changed
             if old_status != new_status:
-                # do something here, like logging the status change
-                content = f"Task status changed from {old_status} to {new_status} by {self.last_action_by}"
-                Comment.objects.create(
-                    task=self,
-                    author=get_system_user(),
-                    content=content,
-                )
+                system_user = get_system_user()
+                if system_user:
+                    content = f"Task status changed from {old_status} to {new_status} by {self.last_action_by}"
+                    Comment.objects.create(
+                        task=self,
+                        author=system_user,
+                        content=content,
+                    )
 
-        if self.status == "Closed" or self.status == "Won't Fix":
-            self.date_closed = timezone.now()
-        else:
-            self.date_closed = None
-        super(Task, self).save(*args, **kwargs)
+        self.date_closed = (
+            timezone.now() if self.status in ("Closed", "Won't Fix") else None
+        )
+        super().save(*args, **kwargs)
 
 
 class Comment(models.Model):
