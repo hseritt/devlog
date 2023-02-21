@@ -256,3 +256,42 @@ class AddSprintViewTestStatus(TestCase):
 
         # Check that the response contains the form submission button
         self.assertTrue(b"Submit" in response.content)
+
+
+class TaskDetailPageTestCase(TestCase):
+    def setUp(self):
+        # create a user to assign the task to
+        admin_user = User.objects.create(username="admin", email="admin@localhost")
+        admin_user.set_password("admin")
+        admin_user.save()
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+
+        # create a project and a sprint for the task
+        self.project = Project.objects.create(
+            name="Test Project",
+            prefix="TP",
+            description="Test project description",
+            manager=self.user,
+        )
+        self.sprint = Sprint.objects.create(
+            name="Test Sprint",
+            project=self.project,
+            leader=self.user,
+        )
+
+        # create a task to test
+        self.task = Task.objects.create(
+            subject="Test Task",
+            assigned_to=self.user,
+            project=self.project,
+            sprint=self.sprint,
+        )
+        self.comment = Comment.objects.create(
+            task=self.task,
+            author=self.user,
+            content="This is a comment\nwith a linebreak",
+        )
+
+    def test_task_detail_page_linebreaks(self):
+        response = self.client.get(reverse("ui-task-detail-view", args=[self.task.id]))
+        self.assertContains(response, "This is a comment<br>\nwith a linebreak")
