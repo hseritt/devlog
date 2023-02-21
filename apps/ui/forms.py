@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import DateTimeInput, ModelForm
 from apps.projects.models import Project
-from apps.tasks.models import Task, Comment
 from apps.tasks.models import Task, Comment, Category
 from apps.sprints.models import Sprint
 
